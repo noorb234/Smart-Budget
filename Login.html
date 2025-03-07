@@ -6,20 +6,23 @@
 </head>
 <body id ="loginBody">
     <header id = "top">
-            <img src = "logo.png">
+        <a href = "Startup.html"> <img src = "logo.png" ></a>
     </header>
     <main id = "loginSection">
-        <img id= "abstractimage" src = "abstract.jpg">
-        <div id = "login">
-            /*still working on this*/
-            <form>
+        <!-------------------Login Form-------------------->
+        <div class = "login-form">
+            <div class = "input-box">
                 <label for = "username">Username:</label><br>
-                <input type = "text" id = "username" name = "username"><br>
+                <input type = "text" id = "username" placeholder = "Username"><br>
+            </div>
+            <div class = "input-box">
                 <label for = "password">Password:</label><br>
-                <input type = "password" id = "password" name = "password"><br>
-                <input type = "submit" value = "Login">
-            </form>
-            <p>Don't have an account? Click here to get started<a href = "signup.html"></a></p>
+                <input type = "password" id = "password" placeholder = "Password"><br>
+            </div>
+            <button id = "loginButton">
+                <a href = "dashboard.html">Login</a>  
+            </button>
+            <p id = "noAccount"><a href = "signup.html">Don't have an account? Click here to get started!</a></p>
         </div>
     </main>
    
