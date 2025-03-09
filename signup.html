@@ -4,11 +4,50 @@
     <title>SignUp</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
-<body id ="loginBody">
+<body id ="signupBody">
     <header id = "top">
             <img src = "logo.png">
     </header>
     <main id = "signupSection">
+        <!-------------------Signup Form-------------------->
+        <div class = "signup-form">
+            <div class = "left">
+                <div class = "input-box">
+                    <label for = "name">Name:</label><br>
+                    <input type = "name" id = "name" placeholder = "Name"><br>
+                </div>
+                <div class = "input-box">
+                    <label for = "email">Email:</label><br>
+                    <input type = "email" id = "email" placeholder = "Email"><br>
+                </div>
+                <div class = "input-box">
+                    <label for = "phone">Phone:</label><br>
+                    <input type = "tel" id = "phone" placeholder = "Phone"><br>
+                </div>
+            </div>
+            <div class = "right">
+                <div class = "input-box">
+                    <label for = "createUsername">Create a username:</label><br>
+                    <input type = "text" id = "createUsername" placeholder = "Username"><br>
+                </div>
+                <div class = "input-box">
+                    <label for = "createPassword">Create a password:</label><br>
+                    <input type = "password" id = "createPassword" placeholder = "Password"><br>
+                </div>
+                <div class = "input-box">
+                    <label for = "confirmPassword">Confirm password:</label><br>
+                    <input type = "password" id = "confirmPassword" placeholder = "Password"><br>
+                </div>
+            </div>
+        <!-------------------Signup Form-------------------->
+        <div id = "signupButtonSection">
+            <button id = "signupButton">
+                <a href = "dashboard.html">Create your Account</a>  
+            </button>
+
+            <p id = "HaveAccount"><a href = "login.html">Already have an account? Click here to login!</a></p>
+        </div>
+    </div>
     </main>
    
 </body>
