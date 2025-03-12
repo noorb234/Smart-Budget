@@ -42,7 +42,7 @@
                 </div>
                 <div class = "input-box">
                     <label for = "createPassword">Create a password:</label><br>
-                    <input type = "password" id = "createPassword" name = "password" placeholder = "Password" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"><br>
+                    <input type = "password" id = "createPassword" name = "password" placeholder = "Password"><br>
                 </div>
                 <div class = "input-box">
                     <label for = "confirmPassword">Confirm password:</label><br>
@@ -62,7 +62,7 @@
                 </div>
                 <div class = "input-box">
                     <label for = "answer2">Security Question 2 answer:</label><br>
-                    <input type = "text" id = "answer2" name = "security_question_2" placeholder = "Answer"><br>
+                    <input type = "text" id = "answer2" name = "security_answer_2" placeholder = "Answer"><br>
                 </div>
             </div>
             <div id = "signupButtonSection">

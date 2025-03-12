@@ -41,8 +41,8 @@ require_once 'config.php';
 		$pw  = $row['password'];
 		
 		//If user input for password matches, log in and go to main menu
-		//if (password_verify($pw_temp, $pw))
-		if ($pw_temp == $pw)
+		if (password_verify($pw_temp, $pw))
+		//if ($pw_temp == $pw)
 		{
 			session_start();
 			

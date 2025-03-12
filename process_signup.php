@@ -47,8 +47,8 @@ if (isset($_POST['username']))
     $username = htmlspecialchars($_POST["username"]);
 if (isset($_POST['password']))
     $password = htmlspecialchars($_POST["password"]);
-if (isset($_POST['confirm_password']))
-    $confirmPassword = htmlspecialchars($_POST["confirm_password"]);
+if (isset($_POST['confirmPassword']))
+    $confirmPassword = htmlspecialchars($_POST["confirmPassword"]);
 if (isset($_POST['security_question_1']))
     $security_question_1 = htmlspecialchars($_POST["security_question_1"]);
 if (isset($_POST['security_answer_1']))
@@ -72,16 +72,16 @@ $fail .= validate_security_answers($security_answer_1, $security_answer_2);
 if ($fail == "")
   {
     $password_hash = password_hash($password, PASSWORD_DEFAULT);
-	add_user($pdo, $firstName, $lastName, $email, $phone, $password_hash, $security_question_1, $security_answer_1, $security_question_2, $security_answer_2, $preference);
+	add_user($pdo, $firstName, $lastName, $email, $phone, $username, $password_hash, $security_question_1, $security_answer_1, $security_question_2, $security_answer_2, $preference);
 	exit;
   }
 else{ //Else return error message and provide link to return to registration page
-	echo "<label><br><br>$fail<br><br>Please <a href='registration.php'>click here</a> to return to registration page and try again.</label>";
+	echo "<label><br><br>$fail<br><br>Please <a href='signup.php'>click here</a> to return to signup page and try again.</label>";
 }
 
 //Validates first name entry
 function validate_firstName($fn){
-	if (fn == ""){
+	if ($fn == ""){
 		return "No first name was entered<br>";
 	}
 }
@@ -113,19 +113,19 @@ function validate_email($pdo, $em)
   
 //Validates first name entry
 function validate_lastName($ln){
-	if (ln == ""){
+	if ($ln == ""){
 		return "No last name was entered<br>";
 	}
 }
 
 //Validates phone number entry
 function validate_phone($pn){
-	if (pn == ""){
+	if ($pn == ""){
 		return "No phone was entered<br>";
 	}
-	else if (!((strpos($pn, "-") > 0)) || preg_match("/^[0-9]{3}-[0-9]{3}-[0-9]{4}$/", $pn)){
-		return "The phone number is invalid"
-	}
+	//else if (!((strpos($pn, "-") > 0)) || preg_match("/^[0-9]{3}-[0-9]{3}-[0-9]{4}$/", $pn)){
+	//	return "The phone number is invalid<br>";
+	//}
 	return "";
 }
 
@@ -175,20 +175,20 @@ function validate_password($pwd, $con_pwd)
   
 //Validates security question entries
 function validate_security_questions($sq1, $sq2){
-	if (sq1 == ""){
+	if ($sq1 == ""){
 		return "No security question 1 was chosen<br>";
 	}
-	else if (sq2 == ""){
+	else if ($sq2 == ""){
 		return "No security question 2 was chosen<br>";
 	}
 }
 
 //Validates security answer entries
 function validate_security_answers($sa1, $sa2){
-	if (sa1 == ""){
+	if ($sa1 == ""){
 		return "No security answer 1 was chosen<br>";
 	}
-	else if (sa2 == ""){
+	else if ($sa2 == ""){
 		return "No security answer 2 was chosen<br>";
 	}
 }
@@ -196,7 +196,7 @@ function validate_security_answers($sa1, $sa2){
 //Adds user to the database using a prepared statement and provides link for user to login
 function add_user($pdo, $fn, $ln, $em, $pn, $un, $pw, $sq1, $sa1, $sq2, $sa2, $prf)
 {
-    $stmt = $pdo->prepare('INSERT INTO users VALUES(?,?,?,?,?,?,?,?,?,?,?)');
+    $stmt = $pdo->prepare('INSERT INTO users (firstName, lastName, email, phone, username, password, security_question_1, security_answer_1, security_question_2, security_answer_2, preferences) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
 
     $stmt->bindParam(1, $fn, PDO::PARAM_STR, 128);
 	  $stmt->bindParam(2, $ln, PDO::PARAM_STR, 128);
