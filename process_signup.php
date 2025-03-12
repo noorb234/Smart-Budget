@@ -73,6 +73,7 @@ if ($fail == "")
   {
     $password_hash = password_hash($password, PASSWORD_DEFAULT);
 	add_user($pdo, $firstName, $lastName, $email, $phone, $username, $password_hash, $security_question_1, $security_answer_1, $security_question_2, $security_answer_2, $preference);
+	header('Location: Login.php');
 	exit;
   }
 else{ //Else return error message and provide link to return to registration page

@@ -10,15 +10,15 @@
     </header>
     <main id = "loginSection">
         <!-------------------Login Form-------------------->
-        <form method="post" action = "authentication.php" style="margin:auto; text-align:center;">
+        <form method="post" action = "authentication.php" >
         <div class = "login-form">
             <div>
                 <label for = "username">Username:</label><br>
-                <input type = "text" id = "username" placeholder = "Username" name = "username"><br>
+                <input required type = "text" id = "username" placeholder = "Username" name = "username"><br>
             </div>
             <div>
                 <label for = "password">Password:</label><br>
-                <input type = "password" id = "password" placeholder = "Password" name = "password"><br>
+                <input required type = "password" id = "password" placeholder = "Password" name = "password"><br>
             </div>
             <button id = "loginButton" type = "submit">Login </button>
         </form>

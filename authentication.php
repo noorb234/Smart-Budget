@@ -33,7 +33,7 @@ require_once 'config.php';
 		$stmt->execute(); 
 
 		//If user name is not found user is told and link is provided for them to return to login screen
-		if (!$stmt->rowCount()) die("User not found.<br><br>Please return to login screen and try again.<br><br><a href='login.php'>Return to login page</a>");
+		if (!$stmt->rowCount()) die("User not found.<br><br>Please return to login screen and try again.<br><br><a href='Login.php'>Return to login page</a>");
 
 		//Fetches user name password from database
 		$row = $stmt->fetch();
@@ -52,11 +52,11 @@ require_once 'config.php';
 		}
 		//Else the user is told the password is invalid and must return to login screen to try again.
 		else{ 
-			die("Invalid username/password combination. Please return to login screen and try again.<br><br><a href='login.php'>Return to login page</a> $un_temp $pw_temp");
+			die("Invalid username/password combination. Please return to login screen and try again.<br><br><a href='Login.php'>Return to login page</a> $un_temp $pw_temp");
 		}
 	}
 	else{
-		echo "Please <a href='login.php'>Click Here</a> to log in.";
+		echo "Please <a href='Login.php'>Click Here</a> to log in.";
 	}
 ?>
 
