@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>SignUp</title>
+    <script src="process_registration.js"></script>
     <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body id ="signupBody">
@@ -10,7 +11,7 @@
     </header>
     <main id = "signupSection">
         <!-------------------Signup Form-------------------->
-       <form action = "process_registration.php" method = "post" onsubmit="return validate(this)" style="margin:auto; text-align:center;" class="signup-form">
+       <form action = "process_signup.php" method = "post" onsubmit="return validate(this)" style="margin:auto; text-align:center;" class="signup-form">
         <h1 id = "signupheader">Sign Up</h1>
         <div class = "signup-form-top">
             <div class = "left">
@@ -20,7 +21,7 @@
                 </div>
                 <div class = "input-box">
                     <label for = "email">Email:</label><br>
-                    <input type = "email" id = "email" email = "email" placeholder = "Email"><br>
+                    <input type = "email" id = "email" name = "email" placeholder = "Email"><br>
                 </div>
             </div>
             <div class = "right">
@@ -30,7 +31,7 @@
                 </div>
                 <div class = "input-box">
                     <label for = "phone">Phone:</label><br>
-                    <input type = "tel" id = "phone" phone ="phone" placeholder = "Phone"><br>
+                    <input type = "tel" id = "phone" name ="phone" placeholder = "Phone"><br>
                 </div>
             </div>
         </div>
@@ -41,7 +42,7 @@
                 </div>
                 <div class = "input-box">
                     <label for = "createPassword">Create a password:</label><br>
-                    <input type = "password" id = "createPassword" name = "password" placeholder = "Password"><br>
+                    <input type = "password" id = "createPassword" name = "password" placeholder = "Password" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"><br>
                 </div>
                 <div class = "input-box">
                     <label for = "confirmPassword">Confirm password:</label><br>

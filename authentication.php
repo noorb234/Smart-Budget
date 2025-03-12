@@ -10,7 +10,7 @@
 </fieldset>
 <body style="background-color:steelblue; color:snow">
 <?php 
-require_once 'dblogin.php';
+require_once 'config.php';
 	
 	try
 	{
