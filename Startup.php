@@ -12,7 +12,7 @@
     <div class = "rectangle">Here to help with all your budgeting needs!</div>
     <img id= "startupLogo" src ="logo.png">
     <button id = "getStartedButton">
-        <a href = "Login.html">Get Started</a>
+        <a href = "Login.php">Get Started</a>
     </button>
 </body>
 </html>
