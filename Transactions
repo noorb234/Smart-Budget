@@ -1,0 +1,42 @@
+<?php
+session_start();
+include 'db_connection.php';
+
+// Fetch transactions for the logged-in user
+$user_id = $_SESSION['user_id'];
+$sql = "SELECT * FROM transactions WHERE user_id = ? ORDER BY date DESC";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transactions</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h2>Transaction History</h2>
+    <table>
+        <tr>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Amount</th>
+            <th>Category</th>
+        </tr>
+        <?php while ($row = $result->fetch_assoc()): ?>
+            <tr>
+                <td><?php echo htmlspecialchars($row['date']); ?></td>
+                <td><?php echo htmlspecialchars($row['description']); ?></td>
+                <td><?php echo htmlspecialchars($row['amount']); ?></td>
+                <td><?php echo htmlspecialchars($row['category']); ?></td>
+            </tr>
+        <?php endwhile; ?>
+    </table>
+    <a href="dashboard.php">Back to Dashboard</a>
+</body>
+</html>
