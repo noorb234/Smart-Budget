@@ -6,7 +6,7 @@
         <ul>
             <li> <a class="navTab" href ="Startup.php">Home</a></li>
             <li> <a class="navTab" href ="dashboard.php">Dashboard</a></li>
-            <li> <a class="navTab" href = "#">Budgeting</a></li>
+            <li> <a class="navTab" href = "BudgetScreen.php">Budgeting</a></li>
             <li> <a class="navTab" href = "#">Future Planning</a></li>
 
         </ul>

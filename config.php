@@ -3,7 +3,7 @@
 $host = "localhost";
 $data = "smart_budget";
 $user = 'root';         
-$pass = '';        
+$pass = 'JonataN10.';        
 $chrs = 'utf8mb4';
 $attr = "mysql:host=$host;dbname=$data;charset=$chrs";
 $opts =
