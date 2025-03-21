@@ -1,0 +1,102 @@
+<?php
+session_start();
+include 'db_connection.php';
+
+// Ensure user is logged in
+if (!isset($_SESSION['userID'])) {
+    header('Location: login.php');
+    exit();
+}
+
+$userID = $_SESSION['userID'];
+
+// Fetch transactions for the user
+$query = "SELECT * FROM transactions WHERE userID = ? ORDER BY date DESC";
+$stmt = $conn->prepare($query);
+$stmt->bind_param('i', $userID);
+$stmt->execute();
+$result = $stmt->get_result();
+$transactions = $result->fetch_all(MYSQLI_ASSOC);
+
+// Handle adding a new transaction
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['addTransaction'])) {
+    $amount = $_POST['amount'];
+    $date = $_POST['date'];
+    $type = $_POST['type'];
+    $categoryID = $_POST['categoryID'];
+    $note = $_POST['note'];
+    $isRecurring = isset($_POST['isRecurring']) ? 1 : 0;
+
+    $insertQuery = "INSERT INTO transactions (userID, amount, date, type, categoryID, note, isRecurring) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($insertQuery);
+    $stmt->bind_param('idssisi', $userID, $amount, $date, $type, $categoryID, $note, $isRecurring);
+    
+    if ($stmt->execute()) {
+        header('Location: transactions.php');
+        exit();
+    } else {
+        $error = "Error adding transaction.";
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transactions</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Transaction History</h2>
+        <table>
+            <tr>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Type</th>
+                <th>Category</th>
+                <th>Note</th>
+                <th>Recurring</th>
+            </tr>
+            <?php foreach ($transactions as $transaction): ?>
+                <tr>
+                    <td><?php echo htmlspecialchars($transaction['date']); ?></td>
+                    <td><?php echo htmlspecialchars($transaction['amount']); ?></td>
+                    <td><?php echo htmlspecialchars($transaction['type']); ?></td>
+                    <td><?php echo htmlspecialchars($transaction['categoryID']); ?></td>
+                    <td><?php echo htmlspecialchars($transaction['note']); ?></td>
+                    <td><?php echo $transaction['isRecurring'] ? 'Yes' : 'No'; ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+
+        <h3>Add Transaction</h3>
+        <form method="POST">
+            <label for="date">Date:</label>
+            <input type="date" name="date" required>
+
+            <label for="amount">Amount:</label>
+            <input type="number" name="amount" step="0.01" required>
+
+            <label for="type">Type:</label>
+            <select name="type" required>
+                <option value="Income">Income</option>
+                <option value="Expense">Expense</option>
+            </select>
+
+            <label for="categoryID">Category:</label>
+            <input type="text" name="categoryID" required>
+
+            <label for="note">Note:</label>
+            <input type="text" name="note">
+
+            <label for="isRecurring">Recurring:</label>
+            <input type="checkbox" name="isRecurring">
+
+            <button type="submit" name="addTransaction">Add</button>
+        </form>
+    </div>
+</body>
+</html>
