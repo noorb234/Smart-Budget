@@ -1,31 +1,41 @@
-/*Dashboard Page*/
-#logo-container{
+/* General Colors */
+:root {
+    --primary-color: #0A599D;
+    --hover-color: #08487D;
+    --icon-hover: #ffffff;
+    --background-blur: rgba(10, 89, 157, 0.8);
+}
+
+/* Dashboard Page */
+#logo-container {
     position: absolute; 
     top: 0;
     left: 0; 
     z-index: 1100; 
 }
 
-#logo-container img{
+#logo-container img {
     width: auto;
     height: 88px;
     display: block;
 }
+
 .nav {
     display: flex;
     align-items: center;
     justify-content: flex-start;
     box-sizing: border-box;
-    background-color: #0A599D;
+    background-color: var(--primary-color);
     width: 100%;
     height: 80px;
     position: relative;
-    top:0;
+    top: 0;
     padding-left: 200px;
     padding-right: 20px;
-
     z-index: 1000;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    color: white;
+    transition: background-color 0.3s ease;
 }
 
 .nav ul {
@@ -35,351 +45,90 @@
     padding: 0;
     margin: 0;
     list-style: none;
-
 }
+
 .navTab {
     text-decoration: none; 
     color: white;
-    margin: 0 15px;
-    padding: 10px 15px;
-    border-radius: 4px;
-    height: auto;
-    width: auto;
+    margin: 0 12px;
+    padding: 10px 18px;
+    border-radius: 6px;
     display: flex;
     justify-content: center;
     align-items: center;
-    border: none; 
-    cursor: pointer;
     font-family: Inter, sans-serif;
     font-size: 16px;
-    font-style: normal;
-    line-height: normal;
     white-space: nowrap;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-.navTab:hover {
-    background-color: #08487D; 
-    transform: translateY(-2px); 
-}
-
-/* BudgetScreen */
-body {
-    font-family: Arial, sans-serif;
-}
-.welcome-label {
-    color: #000000; 
-    font-size: 15px; 
-    margin-top: 175px; 
-    position: absolute; 
-    left: 10px; 
-}
-.your-budget{
-    color: #000000; 
-    font-size: 30px; 
-    margin-top: 225px; 
-    position: absolute; 
-    left: 280px;
-}
-.Category-label{
-    color: #000000; 
-    font-size: 20px; 
-    position: absolute; 
-    top: 500px;
-    left:280px;
-}
-.sidebarTop{
-    display: flex; 
-    align-items: center; 
-    background-color: #7ce3fd;
-    gap: 300px;
-    padding: 25px;
-    width: 70%; 
-    height: 80px; 
-    position: absolute;
-    top: 0px;
-    left: 300px;
-}
-.sidebar1 {
-    position: absolute;
-    top: 225px; 
-    left: 0;     
-    width: 200px; 
-    background-color: #7ce3fd; 
-    padding: 20px; 
-    height: 100vh;  
-}
-
-.sidebar1 a {
-    display: block; 
-    text-decoration: none;
-    color: #1960b1;
-    font-size: 18px;
-    margin: 100px 0; 
-    padding: 10px;
-    text-align: center;
-}
-.sidebar1 a:hover {
-    background-color: #2da3b8; 
-}
-.sidebar img {
-    width: 180px; 
-    height: 100px;
-    position: absolute;
-    top: 10px;
-    right: 1700px;
-}
-.dropbtn {
-    background-color: #008CBA;
-    color: white;
-    padding: 12px 20px;
-    font-size: 16px;
-    border: none;
     cursor: pointer;
-    position: absolute;
-    top: 5px;
-    left:1685px;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+.navTab:hover {
+    background-color: var(--hover-color); 
+    transform: translateY(-2px); 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+ 
 .dropdown {
     position: relative;
     display: inline-block;
+    justify-content: flex-end;
+    width: 100%;
+    float: right;
+}
+
+.icon {
+    margin-left: auto; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 48px;
+    width: 48px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.1);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    cursor: pointer;
+}
+
+.icon i {
+    color: white;
+    font-size: 22px;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.icon:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.icon:hover i {
+    color: var(--icon-hover);
 }
 
 .dropdown-content {
     display: none;
     position: absolute;
+    justify-content: flex-end;
+    width: 100%;
+    float: right;
     background-color: #f9f9f9;
     min-width: 160px;
-    box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
-    position: absolute;
-    top: 50px;
-    left:1700px;
 }
 
 .dropdown-content a {
-    color: black;
-    padding: 10px 15px;
+    color: #274C77;
+    padding: 12px 16px;
     text-decoration: none;
     display: block;
+    font-family: Inter, sans-serif;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
 }
 
 .dropdown:hover .dropdown-content {
     display: block;
-}
-.dropdown-content a:hover {
-    background-color: #ddd;
-}
-
-
-.button1 {
-    background-color: #008CBA;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    position: absolute;
-    top: 800px; 
-    left: 450px;
-}
-
-.button2 {
-    background-color: #008CBA;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    position: absolute;
-    top: 800px; 
-    left: 600px;
-}
-
-.button1:hover {
-    background-color: #006494;
-}
-
-.button2:hover {
-    background-color: #006494;
-}
-
-/* Settings Screen */
-.dropdown {
-    font-size: 25px;
-    position: absolute;
-    top: 120px;
-    left: 1000px;
-}
-.dropdown-button {
-    background-color: #4c93af;
-    color: white;
-    padding: 16px;
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-}
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #f1f1f1;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-    z-index: 1;
-    border-radius: 5px;
-}
-
-
-
-.welcome-user-label{
-    font-size: 24px;
-    position: absolute;
-    top: 120px;
-    left: 20px;
-}
-.NameScreen-Label{
-    font-size: 24px;
-    position: absolute;
-    top: 170px;
-    left: 20px;
-}
-
-.Notis-Label{
-    font-size: 26px;
-    position: absolute;
-    top: 220px;
-    left: 20px;
-}
-
-#Balancecheckbox{   
-    position: absolute;
-    top: 300px;
-    left: 130px;
-}
-.BalanceLabel{
-    font-size: 17px;
-    position: absolute;
-    top: 300px;
-    left: 20px;
-}
-#BudgePlancheckbox{
-    position: absolute;
-    top: 350px;
-    left: 130px;
-}
-.BudgePlanLabel{
-    font-size: 17px;
-    position: absolute;
-    top: 350px;
-    left: 20px;
-}
-#Transactionscheckbox{
-    position: absolute;
-    top: 400px;
-    left: 130px;
-}
-.TransactionsLabel{
-    font-size: 17px;
-    position: absolute;
-    top: 400px;
-    left: 20px;
-}
-
-#Appareancecheckbox{
-    position: absolute;
-    top: 480px;
-    left: 130px;
-}
-
-.AppareanceLabel{
-    font-size: 17px;
-    position: absolute;
-    top: 480px;
-    left: 20px;
-}
-.currentPasswordLabel{
-    position: absolute;
-    top: 530px;
-    left: 20px;
-}
-.currentPasswordText{
-    position: absolute;
-    top: 550px;
-    left: 20px;
-}
-.changePasswordLabel{
-    position: absolute;
-    top: 600px;
-    left: 20px;
-}
-.changePasswordText{
-    position: absolute;
-    top: 620px;
-    left: 20px;
-}
-.confirmPasswordLabel{
-    position: absolute;
-    top: 670px;
-    left: 20px;
-}
-.confirmPasswordText{
-    position: absolute;
-    top: 690px;
-    left: 20px;
-}
-
-.logOut-label{
-    font-size: 21px;
-    position: absolute;
-    top:830px;
-    left: 20px;
-}
-.Delete-account-label{
-    color: red;
-    font-size: 23px;
-    position: absolute;
-    top: 900px;
-    left: 20px;
-}
-
-.ResetDefaultButton{
-    font-size: 22px;
-    position: absolute;
-    top: 870px;
-    left: 700px;
-    border-radius: 50px;
-    background-color: #0A599D;  
-    margin-top: 10px;
-    height: 40px;
-    border: none;
-    cursor: pointer;
-    z-index:1;
-    transition: background-color 0.3s, transform 0.2s;
-    color: whitesmoke;
-    font-family:sans-serif;
-    font-style: normal;
-    font-weight: bold;
-    padding: 8px 25px;
-}
-.saveButton{
-    font-size: 23px;
-    position: absolute;
-    top: 870px;
-    left: 1000px;
-    border-radius: 50px;
-    background-color: #0A599D;  
-    margin-top: 10px;
-    height: 40px;
-    border: none;
-    cursor: pointer;
-    z-index:1;
-    transition: background-color 0.3s, transform 0.2s;
-    color: whitesmoke;
-    font-family:sans-serif;
-    font-style: normal;
-    font-weight: bold;
-    padding: 4px 25px;
 }
