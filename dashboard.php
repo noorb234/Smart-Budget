@@ -11,9 +11,43 @@
 
 <body onload="includeHeader()">
     <div include-header = "header.php"></div>
-<main>
-    <h1>Dashboard</h1>
-    <p>Welcome to the Smart Budget Dashboard. Here you can view your budget, plan for the future, and more.</p>
+    <h1 class = "WelcomeUser">Welcome User!</h1>
+
+    <main class = "dashboardBody">
+    <nav class = "sidebar">
+       <a class="sideTab" href ="dashboard.php">Profile</a>
+       <a class="sideTab" href ="transactions.php">Transactions</a>
+        <a class="sideTab" href = "ViewReports.php">View Your Reports</a>
+        <a class="sideTab" href = "BudgetScreen.php">Set A Budget</a>
+    </nav>
+    <div class = "dashboard">
+        <h2>Monthly Expense Total:</h2>
+        <!-----Inserting total------>
+        <h2>Recent Transactions:</h2>
+        <!-------Insert transactions----->
+        <a class = "viewAllLink" href = "#">View All Transactions</a>
+        <div class = "iconSection">
+            <div class = "icon-item">
+                <a href = "#">
+                    <i class = "fa-solid fa-square-plus"></i>
+                    <p>Add an expense</p>
+                </a>
+            </div>
+            <div class = "icon-item">
+                <a href = "#">
+                    <i class = "fa fa-line-chart"></i>
+                    <p>View your summary</p>
+                </a>
+            </div>
+            <div class = "icon-item">
+                <a href = "#">
+                    <i class = "fa-solid fa-calculator"></i>
+                    <p>What if Calculator?</p>
+                </a>
+            </div>
+
+        </div>
+    </div>
 </main>
 
 </body>
@@ -23,4 +57,5 @@
     </div>
     
 </footer>
+
 </html>

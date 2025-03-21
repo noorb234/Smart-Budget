@@ -2,10 +2,12 @@
 <html lang="en">
 <head>
 <link rel="stylesheet" type="text/css" href="styles.css">
+<link rel="stylesheet" type="text/css" href="styles2.css"> 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
-    <link rel="stylesheet" type="text/css" href="styles2.css"> 
     <script src="include.js"></script>
 </head>
 <body onload="includeHeader()">
@@ -44,15 +46,13 @@
     <label class="logOut-label" onclick=" "><b>Log Out</b></label>
     <label class="Delete-account-label" onclick=" "><b>Delete Account</b></label>
 
-    <div class="dropdown">
-        <button class="dropdown-button">Menu</button>
-        <div class="dropdown-content">
-            <a href="settingScreen.php">Option 1</a>
-            <a href="">Appareance</a>  <!-- This should call the same function when the appearance box is checked --> 
-            <a href="#">Log out</a>  <!-- This should call the same function when the Log out label is pressed --> 
-            <a href="#">what else?</a>
-        </div>
-    </div>
+
 
 </body>
+<footer class = "footer">
+    <div id = "footerSection">
+        <p>Smart Budget<br>New York, NY<br>123-456-7890<br>© 2025 SmartBudget</p>
+    </div>
+    
+</footer>
 </html>
