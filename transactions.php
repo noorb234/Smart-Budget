@@ -43,13 +43,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['addTransaction'])) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Transactions</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="stylesheet" type="text/css" href="styles2.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <script src="include.js"></script>
 </head>
-<body>
-    <div class="container">
+<body onload="includeHeader()">
+    <div include-header = "header.php"></div>
+    <h1 class = "WelcomeUser">Welcome User!</h1>
+
+    <main class = "mainBody">
+        <nav class = "sidebar">
+            <a class="sideTab" href ="dashboard.php">Profile</a>
+            <a class="sideTab" href ="transactions.php">Transactions</a>
+            <a class="sideTab" href = "viewReports.php">View Your Reports</a>
+            <a class="sideTab" href = "BudgetScreen.php">Set A Budget</a>
+        </nav>
+        <div class = "transactions">
         <h2>Transaction History</h2>
         <table>
             <tr>
@@ -97,6 +110,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['addTransaction'])) {
 
             <button type="submit" name="addTransaction">Add</button>
         </form>
-    </div>
+        </div>
+</main>
+
 </body>
+<footer class = "footer">
+    <div id = "footerSection">
+        <p>Smart Budget<br>New York, NY<br>123-456-7890<br>© 2025 SmartBudget</p>
+    </div>
+    
+</footer>
+
 </html>

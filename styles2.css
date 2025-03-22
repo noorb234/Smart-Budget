@@ -136,28 +136,8 @@
 .dropdown:hover .dropdown-content {
     display: block;
 }
-/*Dashboard Page*/
-.WelcomeUser{
-    padding: 40px 30px 10px 30px;
-    margin-top: 100px;
-    color:#0A599D;
-    font-family: inter, sans-serif;
-    
-}
-
-.dashboardBody {
-    display: flex;
-    flex-direction: row;
-    align-items: stretch;
-    justify-content: flex-start;
-    height: calc(100vh - 80px);
-    padding: 30px;
-    gap: 30px;
-    color:#0A599D;
-    font-family: inter, sans-serif;
-  }
-  
-  .sidebar {
+/*Side Bar*/
+.sidebar {
     width: 250px;
     background-color: var(--light-blue);
     border-radius: 10px;
@@ -191,7 +171,26 @@
     color: white;
     transform: translateX(5px);
   }
-  
+  /*All Sections right of Side Bar (Uniform for each page)*/
+  .mainBody {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: flex-start;
+    height: calc(100vh - 80px);
+    padding: 30px;
+    gap: 30px;
+    color:#0A599D;
+    font-family: inter, sans-serif;
+  }
+
+/*Dashboard Page*/
+.WelcomeUser{
+    padding: 40px 30px 10px 30px;
+    margin-top: 100px;
+    color:#0A599D;
+    font-family: inter, sans-serif;
+}
   .dashboard {
     flex: 1;
     background-color: var(--light-blue);
@@ -261,28 +260,22 @@
     font-size: 16px;
     font-weight: 500;
   }
-
+/*
 
 
 /*Budget Page*/
-.budgetBody{
+  .setABudget {
     flex: 1;
+    background-color: var(--light-blue);
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    padding: 30px;
     display: flex;
     flex-direction: column;
-    align-items: center; 
-    position: relative;
-    height: 100vh; 
-    background-color: white;
-    font-family: Inter, sans-serif;
-}
-.welcome-label {
-    color: #000000; 
-    font-size: 15px; 
-    margin-top: 40px; 
-    position: relative;
-    align-self: flex-start; 
-    margin-left: 10px; 
-}
+    gap: 20px;
+    overflow-y: auto;
+  }
+
 .your-budget{
     color: #000000; 
     font-size: 30px; 
@@ -296,37 +289,6 @@
     align-self: center;
 
 }
-
-.sidebar1 {
-    position: fixed;
-    top: 80px; 
-    left: 0;     
-    width: 200px; 
-    background-color: #7ce3fd; 
-    padding: 20px; 
-    height: 100vh;  
-}
-
-.sidebar1 a {
-    display: block; 
-    text-decoration: none;
-    color: #1960b1;
-    font-size: 18px;
-    margin: 100px 0; 
-    padding: 10px;
-    text-align: center;
-}
-.sidebar1 a:hover {
-    background-color: #2da3b8; 
-}
-.sidebar img {
-    width: 180px; 
-    height: 100px;
-    position: absolute;
-    top: 10px;
-    right: 1700px;
-}
-
 .button1 {
     background-color: #008CBA;
     color: white;
@@ -361,8 +323,144 @@
     background-color: #006494;
 }
 
-/* Settings Screen */
+/*Transactions Page*/
+.transactions {
+    flex: 1;
+    background-color: var(--light-blue);
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+  }
+ /*View Reports Page*/
+ .reports {
+    flex: 1;
+    background-color: var(--light-blue);
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+  }
+  /*Future Planning Page*/
+.futureBody {
+    flex: 1;
+    margin-top: 80px; 
+    margin-bottom: 100px; 
+    margin-left: 50px;
+    padding: 40px 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: flex-start;
+    overflow-y: auto;
+    min-height: calc(100vh - 180px);
+    font-family: Inter, sans-serif;
+}
 
+.WhatIfHeading {
+    font-size: 36px;
+    color: #0A599D;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+.subheading {
+    font-size: 20px;
+    color: #0A599D;
+    margin: 5px 0 20px 0;
+    text-align: left;
+}
+
+.inputForm {
+    background-color: #E2F1FD; 
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    transition: transform 0.3s ease;
+}
+
+.inputForm:hover {
+    transform: translateY(-5px);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-size: 16px;
+    margin-bottom: 8px;
+    color: #0A599D;
+    font-weight: bold;
+}
+
+.form-group input {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-group input:focus {
+    border-color: #0A599D;
+    box-shadow: 0 0 8px rgba(10, 89, 157, 0.3);
+    outline: none;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    color: #333;
+}
+
+.submitButton {
+    align-self: center;
+    padding: 12px 40px;
+    background-color: #0A599D;
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.submitButton:hover {
+    background-color: #084472;
+    transform: scale(1.05);
+}
+
+
+/* Settings Screen */
+.settings{
+    flex: 1;
+    min-height: calc(100vh - 200px); 
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 20px 40px;
+    box-sizing: border-box;
+    position: relative;
+    gap: 20px;
+}
 
 .welcome-user-label{
     font-size: 24px;

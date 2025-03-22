@@ -1,97 +1,68 @@
 /*Startup Page*/
-#startupBody {
+.startupBody {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #ffffff;
+}
+
+.container {
     display: flex;
     flex-direction: column;
-    align-items: center; 
-    position: relative;
-    height: 100vh; 
-    background-color: white;
-}
-
-#headerSection {
-    width: 800px;
-    height: 75px;
-    flex-shrink: 0;
-    background-color: #0A599D;
-    display: flex;
-    justify-content: center;
     align-items: center;
-    position: absolute;
-    top: 10%; 
-    left: 50%;
-    transform: translateX(-50%);
-    border-radius: 30px;
-
-}
-
-#header {
-    color: whitesmoke;
     text-align: center;
-    font-family:sans-serif;
-    font-size: 32px;
-    font-style: normal;
-    font-weight: bold;
-    padding: 15px;
+    gap: 40px; 
 }
-.rectangle {
-    width: 500px;
-    height: 180px;
-    background-color: #E2F1FD; 
-    position: absolute;
-    top: calc(15% + 110px); 
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: sans-serif;
+
+.header {
+    background-color: #0A599D;
+    font-family: 'Inter', sans-serif;
+    color: whitesmoke;
+    padding: 20px 70px;
+    margin-top: 70px;
+    border-radius: 30px;
+    font-size: 32px;
+    font-weight: bold;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.get-started {
+    background-color: #0A599D;
+    color: whitesmoke;
+    border: none;
+    border-radius: 30px;
+    padding: 15px 40px;
+    margin-top: 30px;
     font-size: 20px;
     font-weight: bold;
-    border-radius: 30px;
-
-}
-
-#startupLogo {
-    width: 250px;
-    flex-shrink: 0;
-    position: absolute;
-    top: calc(15% + 300px); 
-    left: 50%;
-    transform: translateX(-50%);
-    border-radius: 8px;
-}
-#startupLogo:hover {
-    transform: translateX(-50%) scale(1.1);
-}
-#getStartedButton{
-    border-radius: 30px;
-    background-color: #0A599D;  
-    width: 200px;
-    height: 60px;
-    flex-shrink: 0;
-    position: absolute;
-    top: calc(15% + 525px);
-    left: 50%;
-    transform: translateX(-50%);
-    border: none;
     cursor: pointer;
+    transition: all 0.3s ease;
+    animation: jump 1s ease-in-out infinite;
+    animation-delay: 2s;
 }
-#getStartedButton a{
+
+.get-started a {
     color: whitesmoke;
     text-decoration: none;
-    font-family:sans-serif;
-    font-size: 20px;
-    font-style: normal;
-    font-weight: bold;
-    padding: 15px;
 }
-#getStartedButton:hover{
+
+.get-started:hover {
     background-color: #E2F1FD;
-    border:2px solid #0A599D;
+    border: 2px solid #0A599D;
+    color: #0A599D;
+    animation: none;
 }
-#getStartedButton:hover a{
+
+.get-started:hover a {
     color: #0A599D;
 }
+
+@keyframes jump {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
+
 
 /*Login Page*/
 #loginBody {
