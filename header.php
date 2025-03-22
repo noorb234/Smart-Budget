@@ -16,7 +16,7 @@
             <div class = "dropdown-content">
                 <a href="settings.php">Settings</a>
                 <a href="#">Notifications</a>
-                <a href="#">Log Out</a>
+                <a href="logout.php">Log Out</a>
             </div>
         </div>
     </nav>

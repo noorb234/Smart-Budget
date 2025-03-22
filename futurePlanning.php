@@ -1,3 +1,21 @@
+<?php
+require_once 'config.php';
+	
+	try
+	{
+		$pdo = new PDO($attr, $user, $pass, $opts);
+	}
+	catch (PDOException $e)
+	{
+		throw new PDOException($e->getMessage(), (int)$e->getCode());
+	}
+
+	$query = "SELECT category_id, category_name FROM category";
+	$stmt = $pdo->prepare($query);
+	$stmt->execute();
+
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,7 +37,14 @@
         <form class="inputForm">
             <div class="form-group">
                 <label for="category">Payment Type:</label>
-                <input required type="text" id="category" name="category" placeholder="Category">
+				<select required id="category" name="category">
+					<option value="" disabled selected>Select Category</option>
+					<?php
+					while ($row = $stmt->fetch()) {
+						echo "<option value='" . $row['category_id'] . "'>" . $row['category_name'] . "</option>";
+					}
+					?>
+                <!-- input required type="text" id="category" name="category" placeholder="Category" -->
             </div>
     
             <div class="form-group">

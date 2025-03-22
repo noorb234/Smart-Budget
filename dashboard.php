@@ -1,3 +1,10 @@
+<?php
+
+session_start();
+
+$un = isset($_SESSION['username']) ? $_SESSION['username'] : 'User';
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,7 +18,7 @@
 
 <body onload="includeHeader()">
     <div include-header = "header.php"></div>
-    <h1 class = "WelcomeUser">Welcome User!</h1>
+    <h1 class = "WelcomeUser">Welcome, <?php echo htmlspecialchars($un); ?>!</h1>
 
     <main class = "mainBody">
         <nav class = "sidebar">

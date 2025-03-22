@@ -2,7 +2,7 @@
 include 'db_connection.php'; // Include database connection file
 
 // Fetch budget data from the database
-typically assuming table 'budget' with 'category', 'amount', and 'date'
+// typically assuming table 'budget' with 'category', 'amount', and 'date'
 $query = "SELECT category, SUM(amount) as total FROM budget GROUP BY category";
 $result = mysqli_query($conn, $query);
 

@@ -42,7 +42,6 @@ require_once 'config.php';
 		
 		//If user input for password matches, log in and go to main menu
 		if (password_verify($pw_temp, $pw))
-		//if ($pw_temp == $pw)
 		{
 			session_start();
 			
@@ -52,7 +51,7 @@ require_once 'config.php';
 		}
 		//Else the user is told the password is invalid and must return to login screen to try again.
 		else{ 
-			die("Invalid username/password combination. Please return to login screen and try again.<br><br><a href='Login.php'>Return to login page</a> $un_temp $pw_temp");
+			die("Invalid username/password combination. Please return to login screen and try again.<br><br><a href='Login.php'>Return to login page</a>");
 		}
 	}
 	else{

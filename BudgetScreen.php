@@ -1,3 +1,21 @@
+<?php
+require_once 'config.php';
+	
+	try
+	{
+		$pdo = new PDO($attr, $user, $pass, $opts);
+	}
+	catch (PDOException $e)
+	{
+		throw new PDOException($e->getMessage(), (int)$e->getCode());
+	}
+
+	$query = "SELECT category_id, category_name FROM category";
+	$stmt = $pdo->prepare($query);
+	$stmt->execute();
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,7 +44,15 @@
         
         <div class = "setABudget">
             <label class="your-budget"><b>Your Budget for the Month: $10</b></label><br>
-            <label class="Category-label"><b>Category: </b></label><br>
+            <form>
+			<label class="Category-label"><b>Category: </b></label>
+				<select required id="category" name="category">
+					<option value="" disabled selected>Select Category</option>
+					<?php
+					while ($row = $stmt->fetch()) {
+						echo "<option value='" . $row['category_id'] . "'>" . $row['category_name'] . "</option>";
+					}
+					?><br>
             <button class="button1">Edit Budget</button>
             <button class="button2">Save Budget</button>
         </div>

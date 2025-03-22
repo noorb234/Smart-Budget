@@ -1,3 +1,10 @@
+<?php
+
+session_start();
+
+$un = isset($_SESSION['username']) ? $_SESSION['username'] : 'User';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,7 +20,7 @@
 <body onload="includeHeader()">
     <div include-header = "header.php"></div>
     <main class = settings>
-        <label class="welcome-user-label"><b>Welcome:  "user"</b></label><br>
+        <label class="welcome-user-label"><b>Welcome, <?php echo htmlspecialchars($un); ?>!</b></label><br>
         <label class="NameScreen-Label"> <b>Settings </b> </label>
         <label class="Notis-Label"><b>Notifications Preferences:  </b></label>
 
