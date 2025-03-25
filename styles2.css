@@ -272,6 +272,19 @@
     padding: 30px;
     display: flex;
     flex-direction: column;
+    gap: 40px;
+    overflow-y: auto;
+
+  }
+
+  .setABudget {
+    flex: 1;
+    background-color: var(--light-blue);
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
     gap: 20px;
     overflow-y: auto;
   }
@@ -286,42 +299,38 @@
     color: #000000; 
     font-size: 20px; 
     margin-top: 80px;
-    align-self: center;
+    align-self: left;
 
 }
 .button1 {
     background-color: #008CBA;
-    color: white;
+    color: rgb(126, 0, 0);
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
     position: absolute;
-    top: 800px; 
-    left: 450px;
+    top: 800px;; 
+    left: 30%; 
 }
 
 .button2 {
     background-color: #008CBA;
-    color: white;
+    color: rgb(6, 2, 240);
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
     position: absolute;
-    top: 800px; 
-    left: 600px;
+    top: 80%;  
+    left: 50%; 
 }
 
-.button1:hover {
+.button1:hover, .button2:hover {
     background-color: #006494;
-}
-
-.button2:hover {
-    background-color: #006494;
-}
+}  
 
 /*Transactions Page*/
 .transactions {

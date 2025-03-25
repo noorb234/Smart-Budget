@@ -43,20 +43,25 @@ require_once 'config.php';
         </nav>
         
         <div class = "setABudget">
+
             <label class="your-budget"><b>Your Budget for the Month: $10</b></label><br>
+            
             <form>
-			<label class="Category-label"><b>Category: </b></label>
+			  <label class="Category-label"><b>Category: </b></label>
 				<select required id="category" name="category">
 					<option value="" disabled selected>Select Category</option>
 					<?php
 					while ($row = $stmt->fetch()) {
 						echo "<option value='" . $row['category_id'] . "'>" . $row['category_name'] . "</option>";
 					}
-					?><br>
-            <button class="button1">Edit Budget</button>
-            <button class="button2">Save Budget</button>
+					?><br> 
+               <button class="button1" type="button" onclick="editBudget()">Edit Budget</button>
+               <button class="button2" type="submit">Save Budget</button> 
+            </form>
         </div>
+    </div>
     </main>
+    
 </body>
 
 <footer class = "footer">
@@ -64,4 +69,4 @@ require_once 'config.php';
         <p>Smart Budget<br>New York, NY<br>123-456-7890<br>© 2025 SmartBudget</p>
     </div>
 </footer>
-</html>
+</html> 

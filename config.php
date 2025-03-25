@@ -1,7 +1,7 @@
 <?php
 
-$host = "localhost";
-$data = "smart_budget";
+$host = '127.0.0.1';
+$data = 'smart_budget';
 $user = 'root';         
 $pass = 'JonataN10.';        
 $chrs = 'utf8mb4';
