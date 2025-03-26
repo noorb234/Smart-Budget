@@ -1,8 +1,43 @@
 <?php
-
+require_once 'config.php';
+	
+	try
+	{
+		$pdo = new PDO($attr, $user, $pass, $opts);
+	}
+	catch (PDOException $e)
+	{
+		throw new PDOException($e->getMessage(), (int)$e->getCode());
+	}
 session_start();
 
 $un = isset($_SESSION['username']) ? $_SESSION['username'] : 'User';
+
+if (isset($_SESSION['username']))
+{
+	//Prepare statement to get user_id for user
+	$username = $_SESSION['username'];
+	$query = "SELECT user_id FROM users WHERE username = :username";
+	$stmt = $pdo->prepare($query);
+	$stmt->bindParam(':username', $username, PDO::PARAM_STR);
+	$stmt->execute();
+	
+	//Sets the user_id
+	$user_id = $stmt->fetchColumn();
+	$stmt->closeCursor();
+		
+	//Prepare statement to get the total monthly budget for the user
+	$query_total_budget = "SELECT SUM(monthly_limit) AS total_budget from budget WHERE user_id = :user_id AND budget_month = :current_month";
+	$stmt_budget = $pdo->prepare($query_total_budget);
+	$current_month = date('Y-m-01');
+    $stmt_budget->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+    $stmt_budget->bindParam(':current_month', $current_month, PDO::PARAM_STR);
+    $stmt_budget->execute();
+	
+	//Fetches the total budget
+	$total_budget = $stmt_budget->fetchColumn();
+	$stmt_budget->closeCursor();
+}
 ?>
 
 <!DOCTYPE html>
@@ -28,7 +63,7 @@ $un = isset($_SESSION['username']) ? $_SESSION['username'] : 'User';
             <a class="sideTab" href = "BudgetScreen.php">Set A Budget</a>
         </nav>
         <div class = "dashboard">
-            <h2>Monthly Expense Total:</h2>
+            <h2>Monthly Expense Total: <?php echo isset($total_budget) ? '$' . number_format($total_budget, 2) : '$0.00'; ?></h2>
             <!-----Inserting total------>
             <h2>Recent Transactions:</h2>
             <!-------Insert transactions----->
