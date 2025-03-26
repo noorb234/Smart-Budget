@@ -87,7 +87,7 @@ if (isset($_GET['category'])) {
 
 <body onload="includeHeader()">
     <div include-header = "header.php"></div>
-    <h1 class = "WelcomeUser">Welcome User!</h1>
+    <h1 class = "WelcomeUser">Welcome <?php echo htmlspecialchars($un); ?>!</h1>
 
     <main class = "mainBody">
     <nav class = "sidebar">
