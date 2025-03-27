@@ -1,0 +1,123 @@
+<?php
+session_start();
+include 'db_connection.php';
+
+// Ensure user is logged in
+if (!isset($_SESSION['userID'])) {
+    header('Location: login.php');
+    exit();
+}
+
+$userID = $_SESSION['userID'];
+
+// Fetch transactions for the user
+$query = "SELECT * FROM transactions WHERE userID = ? ORDER BY date DESC";
+$stmt = $conn->prepare($query);
+$stmt->bind_param('i', $userID);
+$stmt->execute();
+$result = $stmt->get_result();
+$transactions = $result->fetch_all(MYSQLI_ASSOC);
+
+// Handle adding a new transaction
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['addTransaction'])) {
+    $amount = $_POST['amount'];
+    $date = $_POST['date'];
+    $type = $_POST['type'];
+    $categoryID = $_POST['categoryID'];
+    $note = $_POST['note'];
+    $isRecurring = isset($_POST['isRecurring']) ? 1 : 0;
+
+    $insertQuery = "INSERT INTO transactions (userID, amount, date, type, categoryID, note, isRecurring) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($insertQuery);
+    $stmt->bind_param('idssisi', $userID, $amount, $date, $type, $categoryID, $note, $isRecurring);
+    
+    if ($stmt->execute()) {
+        header('Location: transactions.php');
+        exit();
+    } else {
+        $error = "Error adding transaction.";
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Transactions</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="stylesheet" type="text/css" href="styles2.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <script src="include.js"></script>
+</head>
+<body onload="includeHeader()">
+    <div include-header="header.php"></div>
+    <h1 class="WelcomeUser">Welcome User!</h1>
+
+    <main class="mainBody">
+        <nav class="sidebar">
+            <a class="sideTab" href="dashboard.php">Profile</a>
+            <a class="sideTab" href="transactions.php">Transactions</a>
+            <a class="sideTab" href="viewReports.php">View Your Reports</a>
+            <a class="sideTab" href="BudgetScreen.php">Set A Budget</a>
+        </nav>
+        
+        <div class="transactions">
+            <h2>Transaction History</h2>
+            <table>
+                <tr>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Type</th>
+                    <th>Category</th>
+                    <th>Note</th>
+                    <th>Recurring</th>
+                </tr>
+                <?php foreach ($transactions as $transaction): ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($transaction['date']); ?></td>
+                        <td><?php echo htmlspecialchars($transaction['amount']); ?></td>
+                        <td><?php echo htmlspecialchars($transaction['type']); ?></td>
+                        <td><?php echo htmlspecialchars($transaction['categoryID']); ?></td>
+                        <td><?php echo htmlspecialchars($transaction['note']); ?></td>
+                        <td><?php echo $transaction['isRecurring'] ? 'Yes' : 'No'; ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </table>
+
+            <h3>Add Transaction</h3>
+            <form method="POST">
+                <label for="date">Date:</label>
+                <input type="date" name="date" required>
+
+                <label for="amount">Amount:</label>
+                <input type="number" name="amount" step="0.01" required>
+
+                <label for="type">Type:</label>
+                <select name="type" required>
+                    <option value="Income">Income</option>
+                    <option value="Expense">Expense</option>
+                </select>
+
+                <label for="categoryID">Category:</label>
+                <input type="text" name="categoryID" required>
+
+                <label for="note">Note:</label>
+                <input type="text" name="note">
+
+                <label for="isRecurring">Recurring:</label>
+                <input type="checkbox" name="isRecurring">
+
+                <button type="submit" name="addTransaction" class="button1">Add</button>
+            </form>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div id="footerSection">
+            <p>Smart Budget<br>New York, NY<br>123-456-7890<br>© 2025 SmartBudget</p>
+        </div>
+    </footer>
+</body>
+</html>
