@@ -1,22 +1,40 @@
 <?php
 session_start();
-include 'db_connection.php';
+include 'config.php';
 
 // Ensure user is logged in
-if (!isset($_SESSION['userID'])) {
+if (!isset($_SESSION['username'])) {
     header('Location: login.php');
     exit();
 }
 
-$userID = $_SESSION['userID'];
+$un = isset($_SESSION['username']) ? $_SESSION['username'] : 'User';
+
+if (isset($_SESSION['username']))
+{
+	//Prepare statement to get user_id for user
+	$username = $_SESSION['username'];
+	$query = "SELECT user_id FROM users WHERE username = :username";
+	$stmt = $pdo->prepare($query);
+	$stmt->bindParam(':username', $username, PDO::PARAM_STR);
+	$stmt->execute();
+	
+	//Sets the user_id
+	$user_id = $stmt->fetchColumn();
+	$stmt->closeCursor();
+}
 
 // Fetch transactions for the user
-$query = "SELECT * FROM transactions WHERE userID = ? ORDER BY date DESC";
-$stmt = $conn->prepare($query);
-$stmt->bind_param('i', $userID);
+$query = "SELECT t.transaction_id, t.user_id, t.category_id, t.transaction_amount, 
+	t.transaction_date, t.transaction_type, t.note, t.is_recurring, c.category_name
+	FROM transaction t
+    JOIN category c ON t.category_id = c.category_id
+    WHERE t.user_id = :user_id
+    ORDER BY t.transaction_date DESC";
+$stmt = $pdo->prepare($query);
+$stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
 $stmt->execute();
-$result = $stmt->get_result();
-$transactions = $result->fetch_all(MYSQLI_ASSOC);
+$transactions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Handle adding a new transaction
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['addTransaction'])) {
@@ -27,9 +45,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['addTransaction'])) {
     $note = $_POST['note'];
     $isRecurring = isset($_POST['isRecurring']) ? 1 : 0;
 
-    $insertQuery = "INSERT INTO transactions (userID, amount, date, type, categoryID, note, isRecurring) VALUES (?, ?, ?, ?, ?, ?, ?)";
-    $stmt = $conn->prepare($insertQuery);
-    $stmt->bind_param('idssisi', $userID, $amount, $date, $type, $categoryID, $note, $isRecurring);
+    $insertQuery = "INSERT INTO transaction (user_id, category_id, transaction_amount, transaction_date, transaction_type, note, is_recurring) VALUES (:userID, :categoryID, :amount, :date, :type, :note, :isRecurring)";
+    $stmt = $pdo->prepare($insertQuery);
+    $stmt->bindParam(':userID', $user_id, PDO::PARAM_INT);
+    $stmt->bindParam(':categoryID', $categoryID, PDO::PARAM_INT);
+    $stmt->bindParam(':amount', $amount, PDO::PARAM_STR);
+    $stmt->bindParam(':date', $date, PDO::PARAM_STR);  // Assuming date is in 'Y-m-d' format
+    $stmt->bindParam(':type', $type, PDO::PARAM_STR);
+    $stmt->bindParam(':note', $note, PDO::PARAM_STR);
+    $stmt->bindParam(':isRecurring', $isRecurring, PDO::PARAM_INT);  // BIT type as 0 or 1
     
     if ($stmt->execute()) {
         header('Location: transactions.php');
@@ -53,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['addTransaction'])) {
 </head>
 <body onload="includeHeader()">
     <div include-header = "header.php"></div>
-    <h1 class = "WelcomeUser">Welcome User!</h1>
+    <h1 class = "WelcomeUser">Welcome, <?php echo htmlspecialchars($un); ?>!</h1>
 
     <main class = "mainBody">
         <nav class = "sidebar">
@@ -74,15 +98,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['addTransaction'])) {
                 <th>Recurring</th>
             </tr>
             <?php foreach ($transactions as $transaction): ?>
-                <tr>
-                    <td><?php echo htmlspecialchars($transaction['date']); ?></td>
-                    <td><?php echo htmlspecialchars($transaction['amount']); ?></td>
-                    <td><?php echo htmlspecialchars($transaction['type']); ?></td>
-                    <td><?php echo htmlspecialchars($transaction['categoryID']); ?></td>
-                    <td><?php echo htmlspecialchars($transaction['note']); ?></td>
-                    <td><?php echo $transaction['isRecurring'] ? 'Yes' : 'No'; ?></td>
-                </tr>
-            <?php endforeach; ?>
+				<tr>
+					<td><?php echo htmlspecialchars($transaction['transaction_date']); ?></td>
+					<td><?php echo htmlspecialchars($transaction['transaction_amount']); ?></td>
+					<td><?php echo htmlspecialchars($transaction['transaction_type']); ?></td>
+					<td><?php echo htmlspecialchars($transaction['category_name']); ?></td> <!-- Displaying category_name -->
+					<td><?php echo htmlspecialchars($transaction['note']); ?></td>
+					<td><?php echo $transaction['is_recurring'] ? 'Yes' : 'No'; ?></td>
+				</tr>
+			<?php endforeach; ?>
         </table>
 
         <h3>Add Transaction</h3>

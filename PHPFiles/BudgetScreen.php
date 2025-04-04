@@ -38,6 +38,28 @@ if (isset($_SESSION['username']))
 	//Fetches the total budget
 	$total_budget = $stmt_budget->fetchColumn();
 	$stmt_budget->closeCursor();
+	
+	// Get the first day of the previous month
+	$prev_month = date('Y-m-01', strtotime("first day of last month")); 
+
+	// Prepare statement to get the previous month's budget for the selected category
+	$query_prev_month = "SELECT monthly_limit FROM budget WHERE category_id = :category_id AND user_id = :user_id AND budget_month = :prev_month";
+	$stmt_prev_month = $pdo->prepare($query_prev_month);
+
+	// Bind the parameters
+	$stmt_prev_month->bindParam(':category_id', $category_id, PDO::PARAM_INT);
+	$stmt_prev_month->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+	$stmt_prev_month->bindParam(':prev_month', $prev_month, PDO::PARAM_STR);
+
+	// Execute the query
+	$stmt_prev_month->execute();
+
+	// Fetch the previous month's budget
+	$prev_month_budget = $stmt_prev_month->fetchColumn();
+
+	// If no budget found, set it to 0.00
+	$prev_month_budget = $prev_month_budget ? number_format($prev_month_budget, 2) : '0.00';
+	$stmt_prev_month->closeCursor();
 }
 
 if (isset($_GET['category'])) {
@@ -57,8 +79,29 @@ if (isset($_GET['category'])) {
     // If there's no budget set, return 0.00
     $category_budget = $category_budget ? number_format($category_budget, 2) : '0.00';
 
+    // Get the first day of the previous month
+    $prev_month = date('Y-m-01', strtotime("first day of last month")); // Get the first day of last month
+
+    // Prepare statement to get the previous month's budget for the selected category
+    $query_prev_month = "SELECT monthly_limit FROM budget WHERE category_id = :category_id AND user_id = :user_id AND budget_month = :prev_month";
+    $stmt_prev_month = $pdo->prepare($query_prev_month);
+    $stmt_prev_month->bindParam(':category_id', $category_id, PDO::PARAM_INT);
+    $stmt_prev_month->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+    $stmt_prev_month->bindParam(':prev_month', $prev_month, PDO::PARAM_STR);
+    $stmt_prev_month->execute();
+
+    // Fetch the previous month's budget
+    $prev_month_budget = $stmt_prev_month->fetchColumn();
+    // If no budget found, set it to 0.00
+    $prev_month_budget = $prev_month_budget ? number_format($prev_month_budget, 2) : '0.00';
+	// Close the previous month statement
+    $stmt_prev_month->closeCursor();
+
     // Return the budget as a JSON response
-    echo json_encode(['budget' => $category_budget]);
+    echo json_encode([
+        'category_budget' => $category_budget,
+        'prev_month_budget' => $prev_month_budget
+    ]);    
     exit;
 }
 	
@@ -67,7 +110,6 @@ if (isset($_GET['category'])) {
 	$stmt->execute();
 	
 	$selected_category_id = isset($_GET['category']) ? $_GET['category'] : '';
-
 ?>
 
 <!DOCTYPE html>
@@ -87,7 +129,7 @@ if (isset($_GET['category'])) {
 
 <body onload="includeHeader()">
     <div include-header = "header.php"></div>
-    <h1 class = "WelcomeUser">Welcome <?php echo htmlspecialchars($un); ?>!</h1>
+    <h1 class = "WelcomeUser">Welcome, <?php echo htmlspecialchars($un); ?>!</h1>
 
     <main class = "mainBody">
     <nav class = "sidebar">
@@ -112,28 +154,69 @@ if (isset($_GET['category'])) {
 					?>
 				</select><br><br>
 
-				<label id="category-budget-label"><b>Budget for Selected Category: </b></label>
-				<span id="category-budget">$0.00</span><br>
+				<div class="budget-container">
+					<label id="category-budget-label"><b>Budget for Selected Category: </b></label>
+					<span id="category-budget">$0.00</span>
+    
+					<input type="number" id="edit-budget-input" placeholder="Enter new budget" style="display: none;">
+				</div>
 
-                <button class="button1" type="button" onclick="editBudget()">Edit Budget</button>
-                <button class="button2" type="submit">Save Budget</button>
+				<div class="budget-info">
+					<!-- Last Month's Budget is hidden by default, will show only in edit mode -->
+					<label id="prev-month-budget-label" style="display: none;"><b>Last Month's Budget: </b></label>
+					<span id="prev-month-budget" style="display: none;">
+						$<?php echo $prev_month_budget; ?>
+					</span>
+				</div>
+
+				<button class="button1" type="button" onclick="editBudget()">Edit Budget</button>
+				<button class="button2" type="submit" style="display: none;" id="save-budget-btn">Save Budget</button>
             </form>
         </div>
-    </div>
-</main>
+	</main>
     
-<script>
-// Function to automatically submit the form when a category is selected
-function submitForm() {
-	const categorySelect = document.getElementById('category');
-	const categoryId = categorySelect.value;
+	<script>
+	// Function to automatically submit the form when a category is selected
+	function submitForm() {
+		const categorySelect = document.getElementById('category');
+		const categoryId = categorySelect.value;
 
-// If a category is selected, fetch its budget using AJAX
-if (categoryId) {
-    fetchCategoryBudget(categoryId);
-    }
-}
-</script>
+		// If a category is selected, fetch its budget using AJAX
+		if (categoryId) {
+			fetchCategoryBudget(categoryId);
+		}
+	}
+
+	// Toggle Edit Mode
+    function editBudget() {
+		const budgetSpan = document.getElementById('category-budget');
+		const editBudgetInput = document.getElementById('edit-budget-input');
+		const saveBtn = document.getElementById('save-budget-btn');
+		const prevMonthBudgetLabel = document.getElementById('prev-month-budget-label');
+		const prevMonthBudget = document.getElementById('prev-month-budget');
+
+		// Switch to edit mode
+		if (editBudgetInput.style.display === 'none') {
+			// Show the input and save button, hide the span
+			editBudgetInput.style.display = 'inline';
+			saveBtn.style.display = 'inline';
+			budgetSpan.style.display = 'none';
+
+			// Show last month's budget label and value
+			prevMonthBudgetLabel.style.display = 'inline';
+			prevMonthBudget.style.display = 'inline';
+		} else {
+			// Revert to view mode
+			editBudgetInput.style.display = 'none';
+			saveBtn.style.display = 'none';
+			budgetSpan.style.display = 'inline';
+
+			// Hide last month's budget label and value
+			prevMonthBudgetLabel.style.display = 'none';
+			prevMonthBudget.style.display = 'none';
+		}
+	}
+	</script>
 	
 </body>
 

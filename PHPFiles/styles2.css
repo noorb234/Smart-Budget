@@ -260,6 +260,26 @@
     font-size: 16px;
     font-weight: 500;
   }
+  
+  .budget-warning {
+		font-size: 24px; /* Adjust the size as needed */
+		font-weight: bold;
+		color: red;
+		padding: 10px;
+		background-color: #f9f9f9;
+		border: 2px solid #e00000;
+		border-radius: 5px;
+	}
+
+	.set-budget-link {
+		font-size: 20px; /* Slightly smaller size for the link */
+		color: blue;
+		text-decoration: none;
+	}
+
+	.set-budget-link:hover {
+		text-decoration: underline;
+	}
 /*
 
 
@@ -302,6 +322,28 @@
     align-self: left;
 
 }
+
+/* Flex container for Budget and Input */
+.budget-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#edit-budget-input {
+    display: none;
+    width: 150px;
+}
+
+/* Hide Last Month's Budget when not in edit mode */
+#prev-month-budget-label {
+    display: none;
+}
+
+.budget-info {
+    margin-top: 20px;
+}
+
 .button1 {
     background-color: #008CBA;
     color: rgb(126, 0, 0);
@@ -330,7 +372,7 @@
 
 .button1:hover, .button2:hover {
     background-color: #006494;
-}  
+} 
 
 /*Transactions Page*/
 .transactions {

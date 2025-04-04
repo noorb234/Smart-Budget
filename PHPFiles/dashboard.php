@@ -25,18 +25,43 @@ if (isset($_SESSION['username']))
 	//Sets the user_id
 	$user_id = $stmt->fetchColumn();
 	$stmt->closeCursor();
-		
-	//Prepare statement to get the total monthly budget for the user
-	$query_total_budget = "SELECT SUM(monthly_limit) AS total_budget from budget WHERE user_id = :user_id AND budget_month = :current_month";
-	$stmt_budget = $pdo->prepare($query_total_budget);
-	$current_month = date('Y-m-01');
+	
+	// Prepare statement to get the user's budget for the current month
+    $query_budget = "SELECT monthly_limit FROM budget WHERE user_id = :user_id AND budget_month = :current_month";
+    $stmt_budget = $pdo->prepare($query_budget);
+    $current_month = date('Y-m-01');
     $stmt_budget->bindParam(':user_id', $user_id, PDO::PARAM_INT);
     $stmt_budget->bindParam(':current_month', $current_month, PDO::PARAM_STR);
     $stmt_budget->execute();
+
+    // Fetches the user's budget amount
+    $user_budget = $stmt_budget->fetchColumn();
+    $stmt_budget->closeCursor();
+		
+	//Prepare statement to get the total current spending for the user
+	$query_total_spending = "SELECT SUM(current_spending) AS total_spending from budget WHERE user_id = :user_id AND budget_month = :current_month";
+	$stmt_spending = $pdo->prepare($query_total_spending);
+	$current_month = date('Y-m-01');
+    $stmt_spending->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+    $stmt_spending->bindParam(':current_month', $current_month, PDO::PARAM_STR);
+    $stmt_spending->execute();
 	
-	//Fetches the total budget
-	$total_budget = $stmt_budget->fetchColumn();
-	$stmt_budget->closeCursor();
+	//Fetches the total spending
+	$total_spending = $stmt_spending->fetchColumn();
+	$stmt_spending->closeCursor();
+	
+	// Fetch transactions for the user
+	$query = "SELECT t.transaction_id, t.user_id, t.category_id, t.transaction_amount, 
+	t.transaction_date, t.transaction_type, t.note, t.is_recurring, c.category_name
+	FROM transaction t
+    JOIN category c ON t.category_id = c.category_id
+    WHERE t.user_id = :user_id
+    ORDER BY t.transaction_date DESC
+	LIMIT 5";
+	$stmt = $pdo->prepare($query);
+	$stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+	$stmt->execute();
+	$transactions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 ?>
 
@@ -63,10 +88,34 @@ if (isset($_SESSION['username']))
             <a class="sideTab" href = "BudgetScreen.php">Set A Budget</a>
         </nav>
         <div class = "dashboard">
-            <h2>Monthly Expense Total: <?php echo isset($total_budget) ? '$' . number_format($total_budget, 2) : '$0.00'; ?></h2>
+			<!-- Check if the budget is set for the current month -->
+            <?php if ($user_budget === null || $user_budget == 0): ?>
+				<p class="budget-warning">
+					You haven't set a budget for this month. 
+					<a href="BudgetScreen.php" class="set-budget-link">Set your budget now!</a>
+				</p>
+			<?php endif; ?>
+            <h2>Monthly Expense Total: <?php echo isset($total_spending) ? '$' . number_format($total_spending, 2) : '$0.00'; ?></h2>
             <!-----Inserting total------>
             <h2>Recent Transactions:</h2>
-            <!-------Insert transactions----->
+            <table>
+				<tr>
+					<th>Date</th>
+					<th>Amount</th>
+					<th>Type</th>
+					<th>Category</th>
+					<th>Note</th>
+				</tr>
+				<?php foreach ($transactions as $transaction): ?>
+					<tr>
+						<td><?php echo htmlspecialchars($transaction['transaction_date']); ?></td>
+						<td><?php echo htmlspecialchars($transaction['transaction_amount']); ?></td>
+						<td><?php echo htmlspecialchars($transaction['transaction_type']); ?></td>
+						<td><?php echo htmlspecialchars($transaction['category_name']); ?></td>
+						<td><?php echo htmlspecialchars($transaction['note']); ?></td>
+					</tr>
+				<?php endforeach; ?>
+			</table>
             <a class = "viewAllLink" href = "#">View All Transactions</a>
             <div class = "iconSection">
                 <div class = "icon-item">

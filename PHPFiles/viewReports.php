@@ -1,10 +1,48 @@
 <?php
-include 'db_connection.php'; // Include database connection file
+include 'config.php'; // Include database connection file
+try
+	{
+		$pdo = new PDO($attr, $user, $pass, $opts);
+	}
+	catch (PDOException $e)
+	{
+		throw new PDOException($e->getMessage(), (int)$e->getCode());
+	}
+	
+	session_start();
+
+// Ensure user is logged in
+if (!isset($_SESSION['username'])) {
+    header('Location: login.php');
+    exit();
+}
+
+$un = isset($_SESSION['username']) ? $_SESSION['username'] : 'User';
+
+if (isset($_SESSION['username']))
+{
+	//Prepare statement to get user_id for user
+	$username = $_SESSION['username'];
+	$query = "SELECT user_id FROM users WHERE username = :username";
+	$stmt = $pdo->prepare($query);
+	$stmt->bindParam(':username', $username, PDO::PARAM_STR);
+	$stmt->execute();
+	
+	//Sets the user_id
+	$user_id = $stmt->fetchColumn();
+	$stmt->closeCursor();
+}
 
 // Fetch budget data from the database
 // typically assuming table 'budget' with 'category', 'amount', and 'date'
-$query = "SELECT category, SUM(amount) as total FROM budget GROUP BY category";
-$result = mysqli_query($conn, $query);
+$query = "SELECT c.category_name, SUM(b.current_spending) as total 
+    FROM budget b
+    JOIN category c ON b.category_id = c.category_id
+	WHERE b.user_id = :user_id
+    GROUP BY c.category_name";
+$stmt = $pdo->prepare($query);
+$stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+$stmt->execute();
 
 $categories = [];
 $amounts = [];
@@ -12,21 +50,27 @@ $colors = [];
 
 // Define category colors
 $categoryColors = [
-    'Food' => '#FF5733',
-    'Transport' => '#33FF57',
-    'Entertainment' => '#3357FF',
-    'Utilities' => '#F39C12',
-    'Health' => '#8E44AD',
-    'Other' => '#BDC3C7'
+    'HOUSING' => '#FF5733',
+    'TRANSPORTATION' => '#33FF57',
+    'INSURANCE' => '#3357FF',
+    'FOOD' => '#F39C12',
+    'PETS' => '#8E44AD',
+    'PERSONAL CARE' => '#BDC3C7',
+    'ENTERTAINMENT' => '#1F77B4',
+    'LOANS' => '#FF9F00',
+    'TAXES' => '#D32F2F',
+    'SAVINGS OR INVESTMENTS' => '#388E3C',
+    'GIFTS AND DONATIONS' => '#1976D2',
+    'LEGAL' => '#F44336'
 ];
 
-while ($row = mysqli_fetch_assoc($result)) {
-    $categories[] = $row['category'];
-    $amounts[] = $row['total'];
-    $colors[] = $categoryColors[$row['category']] ?? '#000000'; // Default color if category not found
+while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    $categories[] = $row['category_name'];  // Category names
+    $amounts[] = $row['total'];        // Total amounts for each category
+    $colors[] = isset($categoryColors[$row['category_name']]) ? $categoryColors[$row['category_name']] : '#000000';  // Default color if not found
 }
 
-mysqli_close($conn);
+$pdo = null;
 ?>
 
 <!DOCTYPE html>
@@ -44,7 +88,7 @@ mysqli_close($conn);
 
 <body onload="includeHeader()">
     <div include-header = "header.php"></div>
-    <h1 class = "WelcomeUser">Welcome User!</h1>
+    <h1 class = "WelcomeUser">Welcome, <?php echo htmlspecialchars($un); ?>!</h1>
 
     <main class = "mainBody">
         <nav class = "sidebar">
@@ -72,7 +116,22 @@ mysqli_close($conn);
                             data: amounts,
                             backgroundColor: colors
                         }]
-                    }
+                    },
+					options: {
+						responsive: true,
+						plugins: {
+							tooltip: {
+								callbacks: {
+									// Custom label to format the tooltip as currency
+									label: function(tooltipItem) {
+										let amount = tooltipItem.raw; // Get the amount for the hovered slice
+										amount = tooltipItem.parsed;
+										return '$' + amount.toFixed(2); // Format as currency
+									}
+								}
+							}
+						}
+					}
                 });
                 
                 // Bar Chart
@@ -85,7 +144,21 @@ mysqli_close($conn);
                             data: amounts,
                             backgroundColor: colors
                         }]
-                    }
+                    },
+					options: {
+						responsive: true,
+						plugins: {
+							tooltip: {
+								callbacks: {
+									// Custom label to format the tooltip as currency
+									label: function(tooltipItem) {
+										let amount = tooltipItem.parsed.y; // Get the amount for the hovered bar (vertical bar chart)
+										return '$' + amount.toFixed(2); // Format as currency
+									}
+								}
+							}
+						}
+					}
                 });
             </script>
         </div>
