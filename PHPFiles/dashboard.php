@@ -1,12 +1,14 @@
 <?php
 require_once 'config.php';
-
-try {
-    $pdo = new PDO($attr, $user, $pass, $opts);
-} catch (PDOException $e) {
-    throw new PDOException($e->getMessage(), (int)$e->getCode());
-}
-
+	
+	try
+	{
+		$pdo = new PDO($attr, $user, $pass, $opts);
+	}
+	catch (PDOException $e)
+	{
+		throw new PDOException($e->getMessage(), (int)$e->getCode());
+	}
 session_start();
 
 $un = isset($_SESSION['username']) ? $_SESSION['username'] : 'User';
@@ -69,19 +71,21 @@ if (isset($_SESSION['username']))
     <title>Dashboard</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
     <link rel="stylesheet" type="text/css" href="styles2.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <meta charset="UTF-8">
     <script src="include.js"></script>
 </head>
+
 <body onload="includeHeader()">
-    <div include-header="header.php"></div>
-    <h1 class="WelcomeUser">Welcome, <?php echo htmlspecialchars($un); ?>!</h1>
-    <main class="mainBody">
-        <nav class="sidebar">
-            <a class="sideTab" href="dashboard.php">Profile</a>
-            <a class="sideTab" href="transactions.php">Transactions</a>
-            <a class="sideTab" href="viewReports.php">View Your Reports</a>
-            <a class="sideTab" href="BudgetScreen.php">Set A Budget</a>
+    <div include-header = "header.php"></div>
+    <h1 class = "WelcomeUser">Welcome, <?php echo htmlspecialchars($un); ?>!</h1>
+
+    <main class = "mainBody">
+        <nav class = "sidebar">
+            <a class="sideTab" href ="dashboard.php">Profile</a>
+            <a class="sideTab" href ="transactions.php">Transactions</a>
+            <a class="sideTab" href = "viewReports.php">View Your Reports</a>
+            <a class="sideTab" href = "BudgetScreen.php">Set A Budget</a>
         </nav>
         <div class = "dashboard">
 			<!-- Check if the budget is set for the current month -->
@@ -120,25 +124,29 @@ if (isset($_SESSION['username']))
                         <p>Add an expense</p>
                     </a>
                 </div>
-                <div class="icon-item">
-                    <a href="#">
-                        <i class="fa fa-line-chart"></i>
+                <div class = "icon-item">
+                    <a href = "#">
+                        <i class = "fa fa-line-chart"></i>
                         <p>View your summary</p>
                     </a>
                 </div>
-                <div class="icon-item">
-                    <a href="#">
-                        <i class="fa-solid fa-calculator"></i>
+                <div class = "icon-item">
+                    <a href = "#">
+                        <i class = "fa-solid fa-calculator"></i>
                         <p>What if Calculator?</p>
                     </a>
                 </div>
+
             </div>
         </div>
-    </main>
+</main>
+
 </body>
-<footer class="footer">
-    <div id="footerSection">
+<footer class = "footer">
+    <div id = "footerSection">
         <p>Smart Budget<br>New York, NY<br>123-456-7890<br>© 2025 SmartBudget</p>
     </div>
+    
 </footer>
+
 </html>
