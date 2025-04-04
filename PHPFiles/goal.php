@@ -1,6 +1,6 @@
 <!-- <?php
 // Your OpenAI API Key (replace with your actual API key)
-//$apiKey = "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";
+
 $apiKey = "";
 // OpenAI API URL (use the appropriate endpoint you want to call)
 $url = "https://api.openai.com/v1/completions";  // You might use different endpoints like chat/completions
