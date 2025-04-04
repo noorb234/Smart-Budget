@@ -1,5 +1,4 @@
 <!-- <?php
-// Your OpenAI API Key (replace with your actual API key)
 
 $apiKey = "";
 // OpenAI API URL (use the appropriate endpoint you want to call)
