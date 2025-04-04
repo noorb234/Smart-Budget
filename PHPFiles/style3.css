@@ -1,0 +1,36 @@
+
+/*GOAL Screen */
+/* .goals{
+    flex: 1;
+    min-height: calc(100vh - 200px); 
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 20px 40px;
+    box-sizing: border-box;
+    position: relative;
+    gap: 20px;
+} */
+
+.goalsContrainer{
+    position: absolute;
+    top: 1000px; /* Reduced for visibility */
+    left: 50px; /* Reduced for visibility */
+}
+
+/* The text field's absolute position */
+.timeFrameTextField {
+    position: absolute;
+    top: 1000px; /* Reduced for visibility */
+    left: 50px; /* Reduced for visibility */
+}
+.randomLabel{
+    position: absolute;
+    top: 1010px;
+}
+
+
+
+/*  Reset Password Screen  */

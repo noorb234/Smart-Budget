@@ -45,7 +45,6 @@ $un = isset($_SESSION['username']) ? $_SESSION['username'] : 'User';
             <input class="changePasswordText" type="password"></input>
             <Label class="confirmPasswordLabel"><b>Confirm New Password </b></Label>
             <input class="confirmPasswordText" type="password"></input>
-
         </form>
     
         <button class="ResetDefaultButton" onclick=" "> Reset to Default </button>
