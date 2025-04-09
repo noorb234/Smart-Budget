@@ -86,6 +86,7 @@ if (isset($_SESSION['username']))
             <a class="sideTab" href ="transactions.php">Transactions</a>
             <a class="sideTab" href = "viewReports.php">View Your Reports</a>
             <a class="sideTab" href = "BudgetScreen.php">Set A Budget</a>
+            <a class="sideTab" href = "goal.php">Goal Planning</a>
         </nav>
         <div class = "dashboard">
 			<!-- Check if the budget is set for the current month -->

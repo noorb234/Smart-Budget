@@ -14,13 +14,13 @@
             padding: 20px;
         }
         #passwordTop img {
-            width: 150px;
+            width: 200px;
         }
 
         /* Main form styling */
         #ForgotPassword {
-            width: 400px;
-            height: 600px;
+            width: 500px;
+            height: 100%;
             margin: 50px auto;
             background-color: white;
             padding: 20px;
@@ -29,10 +29,28 @@
             background-color: #E2F1FD;
         }
 
-        .resetPasswordform {
+        .findUsernamediv{
+            display: grid ;
+            align-items: center  ;
+            justify-content: center;
+            width: 500px;
+            height: 150px;
+            margin-bottom: 0px;
             display: flex;
             flex-direction: column;
             gap: 20px;
+
+        }
+
+        .resetPasswordform {
+            display: grid ;
+            align-items: center  ;
+            justify-content: center;
+            width: 500px;
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
         .resetPasswordform div {
@@ -40,24 +58,76 @@
         }
 
         /**************************** TextFields ************************************/
-        #passwordUsername,
-        #firstAnswerLabel,
-        #secondAnswerLabel,
-        #thirdAnswerLabel {
-            width: 100%;
+        #passwordUsername{
+            display: grid ;
+            align-items: center  ;
+            width: 70%;
             padding: 10px;
-            margin-bottom: 15px;
+            margin-bottom: 0px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        #firstAnswerField,
+        #secondAnswerField {
+            display: grid ;
+            align-items: center  ;
+            width: 70%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        #ResetPasswordLabelField{
+            display: grid ;
+            align-items: center  ;
+            width: 70%;
+            padding: 10px;
+            margin-bottom: 20px;
             border: 1px solid #ccc;
             border-radius: 5px;
             box-sizing: border-box;
         }
 
         /**************************** Labels ************************************/
-        .passwordUsernameLabel,
-        .firstQuestionLabel,
-        .secondQuestionLabel,
-        .thirdQuestionLabel {
+        .passwordUsernameLabel{
+            font-size: 18px;
+            color:#0A599D;
             font-weight: bold;
+            display: block;
+            font-family:sans-serif;
+            margin-top: 10px;
+            margin-bottom: 3px;
+        }
+        .firstQuestionLabel{
+            font-size: 18px;
+            color:#0A599D;
+            font-weight: bold;
+            display: block;
+            font-family:sans-serif;
+            margin-top: 10px;
+            margin-bottom: 3px;
+        }
+        .secondQuestionLabel{
+            font-size: 18px;
+            color:#0A599D;
+            font-weight: bold;
+            display: block;
+            font-family:sans-serif;
+            margin-top: 10px;
+            margin-bottom: 3px;
+        }
+        .ResetPasswordLabel{
+            font-size: 18px;
+            color:#0A599D;
+            font-weight: bold;
+            display: block;
+            font-family:sans-serif;
+            margin-top: 10px;
+            margin-bottom: 3px;
         }
 
         /**************************** Button ************************************/
@@ -66,7 +136,7 @@
             background-color: #0A599D;
             width: 40%;
             height: 40px;
-            margin-top: 20px;
+            margin-top: 0px;
             border: none;
             cursor: pointer;
             color: whitesmoke;
@@ -79,67 +149,29 @@
 
         #resetPassword:hover {
             background-color: #0056b3;
+            transform: translateY(-2px);
         }
-
-        /************************** Dropdown Styles *************************/
-        .dropdownQuestions,
-        .dropdownQuestions2,
-        .dropdownQuestions3 {
-            position: relative;
-            width: 100%;
-        }
-
-        .dropdownQuestionsList,
-        .dropdownQuestionsList2,
-        .dropdownQuestionsList3 {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            width: 100%;
-            background-color: white;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-            border-radius: 4px;
-            display: none;
-        }
-
-        .dropdownQuestionsList a,
-        .dropdownQuestionsList2 a,
-        .dropdownQuestionsList3 a {
-            display: block;
-            padding: 10px;
-            text-decoration: none;
-            color: #333;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .dropdownQuestionsList a:hover,
-        .dropdownQuestionsList2 a:hover,
-        .dropdownQuestionsList3 a:hover {
-            background-color: #a2a1a3;
-        }
-
-        .questionButton,
-        .questionButton2,
-        .questionButton3{
-            width: 100%;
-            padding: 10px;
+        #findUsername{
+            border-radius: 30px;
             background-color: #0A599D;
-            color: white;
+            width: 40%;
+            height: 40px;
+            margin-top:0px;
+            margin-bottom: 0px;
             border: none;
-            border-radius: 4px;
             cursor: pointer;
+            color: whitesmoke;
+            text-decoration: none;
+            font-family: sans-serif;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s;
         }
-
-        .questionButton:hover {
+        #findUsername:hover {
             background-color: #0056b3;
+            transform: translateY(-2px);
         }
 
-        /* Show dropdown when active */
-        .active .dropdownQuestionsList,
-        .active .dropdownQuestionsList2,
-        .active .dropdownQuestionsList3 {
-            display: block;
-        }
     </style>
 </head>
 <body id="forgotPasswordBody">
@@ -151,59 +183,28 @@
     </header>
 
     <main id="ForgotPassword">
-        <form id="formPassword" method="post" action="">
-            <div class="resetPasswordform">
-                <div>
+        <form id="findUsernameForm" method="post" action="">
+            
+                <div  class="findUsernamediv">
                     <label class="passwordUsernameLabel">Username:</label>
                     <input required type="text" id="passwordUsername" placeholder="Username">
+                    <button id="findUsername" type="submit">Look up Username</button>
+
                 </div>
 
-                <!-- First Question Dropdown -->
-                <div class="dropdownQuestions">
-                    <button type="button" class="questionButton">Select First Question</button>
-                    <div class="dropdownQuestionsList">
-                        <a href="#">First Question</a>
-                        <a href="#">Second Question</a>
-                        <a href="#">Third Question</a>
-                    </div>
-                </div>
+        </form>
+        <form id="formPassword" method="post" action="">
+            <div class="resetPasswordform">
+                <label class="firstQuestionLabel">First Question goes here</label>
+                <input required type="text" id="firstAnswerField" placeholder="Answer">
 
-                <div>
-                    <label class="firstQuestionLabel">First Question Answer:</label>
-                    <input required type="text" id="firstAnswerLabel" placeholder="Answer">
-                </div>
+                <label class="secondQuestionLabel">Second Question goes here</label>
+                <input required type="text" id="secondAnswerField" placeholder="Answer">
 
-                <!-- Second Question Dropdown -->
-                <div class="dropdownQuestions2">
-                    <button type="button" class="questionButton2">Select Second Question</button>
-                    <div class="dropdownQuestionsList2">
-                        <a href="#">First Question</a>
-                        <a href="#">Second Question</a>
-                        <a href="#">Third Question</a>
-                    </div>
-                </div>
-
-                <div>
-                    <label class="secondQuestionLabel">Second Question Answer:</label>
-                    <input required type="text" id="secondAnswerLabel" placeholder="Answer">
-                </div>
-
-                <!-- Third Question Dropdown -->
-                <div class="dropdownQuestions3">
-                    <button type="button" class="questionButton3">Select Third Question</button>
-                    <div class="dropdownQuestionsList3">
-                        <a href="#">First Question</a>
-                        <a href="#">Second Question</a>
-                        <a href="#">Third Question</a>
-                    </div>
-                </div>
-
-                <div>
-                    <label class="thirdQuestionLabel">Third Question Answer:</label>
-                    <input required type="text" id="thirdAnswerLabel" placeholder="Answer">
-                </div>
-
+                <label class="ResetPasswordLabel">Reset Password:</label>
+                <input required type="text" id="ResetPasswordLabelField" placeholder="New Password">
                 <button id="resetPassword" type="submit">Reset Password</button>
+              
             </div>
         </form>
     </main>
@@ -213,17 +214,6 @@
             <p>Smart Budget<br>New York, NY<br>123-456-7890<br>© 2025 SmartBudget</p>
         </div>
     </footer>
-
-    <script>
-        // JavaScript to toggle the dropdown for each question
-        const questionButtons = document.querySelectorAll('.questionButton, .questionButton2, .questionButton3');
-        questionButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const dropdown = this.parentElement;
-                dropdown.classList.toggle('active');
-            });
-        });
-    </script>
 
 </body>
 </html>

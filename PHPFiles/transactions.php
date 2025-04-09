@@ -85,6 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['addTransaction'])) {
             <a class="sideTab" href ="transactions.php">Transactions</a>
             <a class="sideTab" href = "viewReports.php">View Your Reports</a>
             <a class="sideTab" href = "BudgetScreen.php">Set A Budget</a>
+    
         </nav>
         <div class = "transactions">
         <h2>Transaction History</h2>
