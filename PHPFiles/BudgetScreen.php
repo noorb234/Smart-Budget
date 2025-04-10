@@ -14,6 +14,43 @@ require_once 'config.php';
 
 $un = isset($_SESSION['username']) ? $_SESSION['username'] : 'User';
 
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['ajax'])) {
+    $categoryId = $_POST['category'];
+    $budgetValue = $_POST['budget'];
+
+    // Prepare the query to save or update the budget for the current month
+    $currentMonth = date('Y-m');  // Current month (e.g., '2025-04')
+
+    // Check if a budget already exists for the category for the current month
+    $sql = "SELECT * FROM budget WHERE category_id = ? AND month = ?";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bind_param("is", $categoryId, $currentMonth);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        // Update the budget if it exists for this category and month
+        $sql = "UPDATE budget SET budget = ? WHERE category_id = ? AND month = ?";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bind_param("dis", $budgetValue, $categoryId, $currentMonth);
+        $stmt->execute();
+
+        $response = ['status' => 'success', 'category_budget' => $budgetValue];
+    } else {
+        // Insert a new budget if it doesn't exist for this category and month
+        $sql = "INSERT INTO budget (category_id, budget, month) VALUES (?, ?, ?)";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bind_param("dis", $categoryId, $budgetValue, $currentMonth);
+        $stmt->execute();
+
+        $response = ['status' => 'success', 'category_budget' => $budgetValue];
+    }
+
+    // Return the response to the AJAX request
+    echo json_encode($response);
+    exit;
+}
+
 if (isset($_SESSION['username']))
 {
 	//Prepare statement to get user_id for user
@@ -62,7 +99,7 @@ if (isset($_SESSION['username']))
 	$stmt_prev_month->closeCursor();
 }
 
-if (isset($_GET['category'])) {
+if (isset($_GET['category']) && isset($_GET['ajax'])) {
     $category_id = $_GET['category'];
 
     // Prepare statement to get the budget for the selected category
@@ -104,6 +141,45 @@ if (isset($_GET['category'])) {
     ]);    
     exit;
 }
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['ajax']) && isset($_POST['category'], $_POST['budget'])) {
+    // Get the category and the budget amount
+    $category_id = $_POST['category'];
+    $new_budget = $_POST['budget'];
+
+    // Check if there's already a budget for the selected category and current month
+    $query_check = "SELECT budget_id FROM budget WHERE user_id = :user_id AND category_id = :category_id AND budget_month = :current_month";
+    $stmt_check = $pdo->prepare($query_check);
+    $stmt_check->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+    $stmt_check->bindParam(':category_id', $category_id, PDO::PARAM_INT);
+    $stmt_check->bindParam(':current_month', $current_month, PDO::PARAM_STR);
+    $stmt_check->execute();
+
+    // If a budget exists, update it; otherwise, insert a new budget
+    if ($stmt_check->fetchColumn()) {
+        // Update the budget
+        $query_update = "UPDATE budget SET monthly_limit = :new_budget WHERE user_id = :user_id AND category_id = :category_id AND budget_month = :current_month";
+        $stmt_update = $pdo->prepare($query_update);
+        $stmt_update->bindParam(':new_budget', $new_budget, PDO::PARAM_STR);
+        $stmt_update->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt_update->bindParam(':category_id', $category_id, PDO::PARAM_INT);
+        $stmt_update->bindParam(':current_month', $current_month, PDO::PARAM_STR);
+        $stmt_update->execute();
+    } else {
+        // Insert a new budget record
+        $query_insert = "INSERT INTO budget (user_id, category_id, monthly_limit, budget_month) VALUES (:user_id, :category_id, :new_budget, :current_month)";
+        $stmt_insert = $pdo->prepare($query_insert);
+        $stmt_insert->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt_insert->bindParam(':category_id', $category_id, PDO::PARAM_INT);
+        $stmt_insert->bindParam(':new_budget', $new_budget, PDO::PARAM_STR);
+        $stmt_insert->bindParam(':current_month', $current_month, PDO::PARAM_STR);
+        $stmt_insert->execute();
+    }
+
+    // Redirect back to the budget page after saving
+    header("Location: BudgetScreen.php?category=$category_id");
+    exit;
+}
 	
 	$query = "SELECT category_id, category_name FROM category";
 	$stmt = $pdo->prepare($query);
@@ -143,10 +219,10 @@ if (isset($_GET['category'])) {
 
             <label class="your-budget"><b>Your Budget for the Month: <?php echo isset($total_budget) ? '$' . number_format($total_budget, 2) : '$0.00'; ?></b></label><br>
             
-             <form id="budgetForm" method="get">
-                <label class="Category-label"><b>Category: </b></label>
-                <select required id="category" name="category" onchange="submitForm()">
-				<option value="" disabled selected>Select Category</option>
+             <form id="budgetForm" method="POST">
+				<label class="Category-label"><b>Category: </b></label>
+				<select required id="category" name="category" onchange="submitForm()">
+					<option value="" disabled selected>Select Category</option>
 					<?php
 					while ($row = $stmt->fetch()) {
 						echo "<option value='" . $row['category_id'] . "'>" . $row['category_name'] . "</option>";
@@ -157,8 +233,8 @@ if (isset($_GET['category'])) {
 				<div class="budget-container">
 					<label id="category-budget-label"><b>Budget for Selected Category: </b></label>
 					<span id="category-budget">$0.00</span>
-    
-					<input type="number" id="edit-budget-input" placeholder="Enter new budget" style="display: none;">
+
+					<input type="number" id="edit-budget-input" name="budget" placeholder="Enter new budget" style="display: none;">
 				</div>
 
 				<div class="budget-info">
@@ -169,9 +245,11 @@ if (isset($_GET['category'])) {
 					</span>
 				</div>
 
-				<button class="button1" type="button" onclick="editBudget()">Edit Budget</button>
-				<button class="button2" type="submit" style="display: none;" id="save-budget-btn">Save Budget</button>
-            </form>
+				<div class="button-group">
+					<button class="button1" type="button" onclick="editBudget()">Edit Budget</button>
+					<button class="button2" type="submit" style="display: none;" id="save-budget-btn">Save Budget</button>
+				</div>
+			</form>
         </div>
 	</main>
     
@@ -188,7 +266,7 @@ if (isset($_GET['category'])) {
 	}
 
 	// Toggle Edit Mode
-    function editBudget() {
+	function editBudget() {
 		const budgetSpan = document.getElementById('category-budget');
 		const editBudgetInput = document.getElementById('edit-budget-input');
 		const saveBtn = document.getElementById('save-budget-btn');

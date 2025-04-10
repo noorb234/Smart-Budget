@@ -86,7 +86,7 @@ if (isset($_SESSION['username']))
             <a class="sideTab" href ="transactions.php">Transactions</a>
             <a class="sideTab" href = "viewReports.php">View Your Reports</a>
             <a class="sideTab" href = "BudgetScreen.php">Set A Budget</a>
-            <a class="sideTab" href = "goal.php">Goal Planning</a>
+			<a class="sideTab" href = "goal.php">Goal Planning</a>
         </nav>
         <div class = "dashboard">
 			<!-- Check if the budget is set for the current month -->
@@ -117,7 +117,7 @@ if (isset($_SESSION['username']))
 					</tr>
 				<?php endforeach; ?>
 			</table>
-            <a class = "viewAllLink" href = "#">View All Transactions</a>
+            <a class = "viewAllLink" href = "transactions.php">View All Transactions</a>
             <div class = "iconSection">
                 <div class = "icon-item">
                     <a href = "#">

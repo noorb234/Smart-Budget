@@ -344,30 +344,35 @@
     margin-top: 20px;
 }
 
-.button1 {
+.button1, .button2 {
     background-color: #008CBA;
-    color: rgb(126, 0, 0);
+    color: white;
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
-    position: absolute;
-    top: 800px;; 
-    left: 30%; 
+    margin: 10px;
+    position: static;
 }
 
-.button2 {
-    background-color: #008CBA;
-    color: rgb(6, 2, 240);
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    position: absolute;
-    top: 80%;  
-    left: 50%; 
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+@media (max-width: 600px) {
+    .button-group {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .button-group button {
+        width: 80%;
+    }
 }
 
 .button1:hover, .button2:hover {
