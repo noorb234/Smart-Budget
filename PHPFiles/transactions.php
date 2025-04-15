@@ -109,11 +109,21 @@ $categories = $categoryStmt->fetchAll(PDO::FETCH_ASSOC);
 			$stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);  // Bind user_id
 			$stmt->bindParam(':category_id', $categoryID, PDO::PARAM_INT); 
             $stmt->execute();
+            
         } else {
-            // If no budget exists for the month, notify user to go to the budget screen
-            $error = "No budget exists for this category and month. Please go to the Budget Screen to set a budget, then return here to add the transaction.";
-            echo "<script>alert('$error'); window.location.href='BudgetScreen.php';</script>";
-            exit();  // Stop further execution
+            // No budget exists, create one with transaction amount as the default monthly_limit
+            $monthly_limit = $amount;
+            $current_spending = ($type === 'EXPENSE') ? $amount : -$amount;
+        
+            $insertBudgetQuery = "INSERT INTO budget (user_id, category_id, monthly_limit, current_spending, budget_month) 
+                                  VALUES (:user_id, :category_id, :monthly_limit, :current_spending, :budget_month)";
+            $stmt = $pdo->prepare($insertBudgetQuery);
+            $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+            $stmt->bindParam(':category_id', $categoryID, PDO::PARAM_INT);
+            $stmt->bindParam(':monthly_limit', $monthly_limit, PDO::PARAM_STR);
+            $stmt->bindParam(':current_spending', $current_spending, PDO::PARAM_STR);
+            $stmt->bindParam(':budget_month', $transactionBudgetDateFormatted, PDO::PARAM_STR);
+            $stmt->execute();
         }
         // Optionally, redirect after successful insertion
         header('Location: transactions.php');
@@ -135,6 +145,7 @@ $categories = $categoryStmt->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <script src="include.js"></script>
 </head>
+
 <body onload="includeHeader()">
     <div include-header = "header.php"></div>
     <h1 class = "WelcomeUser">Welcome, <?php echo htmlspecialchars($un); ?>!</h1>
@@ -145,6 +156,7 @@ $categories = $categoryStmt->fetchAll(PDO::FETCH_ASSOC);
             <a class="sideTab" href ="transactions.php">Transactions</a>
             <a class="sideTab" href = "viewReports.php">View Your Reports</a>
             <a class="sideTab" href = "BudgetScreen.php">Set A Budget</a>
+            <a class="sideTab" href = "goal.php">Goal Planning</a>
         </nav>
         <div class = "transactions">
         <h2>Transaction History</h2>
@@ -158,15 +170,19 @@ $categories = $categoryStmt->fetchAll(PDO::FETCH_ASSOC);
                 <th>Recurring</th>
             </tr>
             <?php foreach ($transactions as $transaction): ?>
-				<tr>
-					<td><?php echo htmlspecialchars($transaction['transaction_date']); ?></td>
-					<td><?php echo htmlspecialchars($transaction['transaction_amount']); ?></td>
-					<td><?php echo htmlspecialchars($transaction['transaction_type']); ?></td>
-					<td><?php echo htmlspecialchars($transaction['category_name']); ?></td> <!-- Displaying category_name -->
-					<td><?php echo htmlspecialchars($transaction['note']); ?></td>
-					<td><?php echo $transaction['is_recurring'] ? 'Yes' : 'No'; ?></td>
-				</tr>
-			<?php endforeach; ?>
+                <?php
+                    $isExpense = strtoupper($transaction['transaction_type']) === 'EXPENSE';
+                    $rowStyle = $isExpense ? 'style="color: red;"' : '';
+                ?>
+                <tr <?php echo $rowStyle; ?>>
+                    <td><?php echo htmlspecialchars($transaction['transaction_date']); ?></td>
+                    <td><?php echo htmlspecialchars($transaction['transaction_amount']); ?></td>
+                    <td><?php echo htmlspecialchars($transaction['transaction_type']); ?></td>
+                    <td><?php echo htmlspecialchars($transaction['category_name']); ?></td>
+                    <td><?php echo htmlspecialchars($transaction['note']); ?></td>
+                    <td><?php echo $transaction['is_recurring'] ? 'Yes' : 'No'; ?></td>
+                </tr>
+            <?php endforeach; ?>
         </table>
 
         <h3>Add Transaction</h3>
@@ -174,8 +190,8 @@ $categories = $categoryStmt->fetchAll(PDO::FETCH_ASSOC);
             <label for="date">Date:</label>
             <input type="date" name="date" required>
 
-            <label for="amount">Amount:</label>
-            <input type="number" name="amount" step="0.01" required>
+            <label for="amount" >Amount:</label>
+            <input type="number" name="amount" step="0.01" required placeholder="e.g $100">
 
             <label for="type">Type:</label>
             <select name="type" required>
@@ -193,7 +209,7 @@ $categories = $categoryStmt->fetchAll(PDO::FETCH_ASSOC);
             </select>
 
             <label for="note">Note:</label>
-            <input type="text" name="note">
+            <input type="text" name="note" placeholder="e.g Rent">
 
             <label for="isRecurring">Recurring:</label>
             <input type="checkbox" name="isRecurring">

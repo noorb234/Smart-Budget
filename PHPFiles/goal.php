@@ -1,3 +1,18 @@
+<?php
+require_once 'config.php';
+	
+	try
+	{
+		$pdo = new PDO($attr, $user, $pass, $opts);
+	}
+	catch (PDOException $e)
+	{
+		throw new PDOException($e->getMessage(), (int)$e->getCode());
+	}
+session_start();
+
+$un = isset($_SESSION['username']) ? $_SESSION['username'] : 'User';
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -12,7 +27,7 @@
     <script src="include.js"></script>
 <style>
     .goals {
-        margin-top: 150px;
+        margin-top: 0px;
         display:  flex;
         /* background-color: aqua; */
         gap: 20px;
@@ -20,9 +35,10 @@
 
     /***********************Side Bar*************************/ 
     .Goalsidebar{
-        top: 300px;
+        /* top: 300px; */
         width: 250px;
         height: 750px;
+        margin-left: 25px;
         background-color: var(--light-blue);
         border-radius: 10px;
         box-shadow: 0 10px 20px rgba(0,0,0,0.1);
@@ -31,6 +47,9 @@
         flex-direction: column;
         gap: 20px;
         transition: all var(--transition-speed) ease;
+        font-family: sans-serif;
+        font-size: 16px;
+        font-weight: bold;
     }
     .GoalssideTab {
     display: flex;
@@ -147,6 +166,20 @@
         margin-bottom: 0px;
         margin-left: 200px;
     }
+    .WelcomeUserGoalsLabel{
+        padding: 40px 30px 10px 30px;
+        margin-top: 100px;
+        color:#0A599D;
+        font-family: inter, sans-serif;
+        /* font-size: 20px;
+        color:#0A599D;
+        font-weight: bold;
+        display: block;
+        font-family:sans-serif;
+        margin-top:100px; */
+        /* margin-bottom: 0px;
+        margin-left: 200px; */ 
+    }
 
     /************************** Labels **********************/
 
@@ -204,6 +237,8 @@
 
 <body onload="includeHeader()">
     <div include-header="header.php"></div> 
+
+    <h1 class = "WelcomeUser">Welcome, <?php echo htmlspecialchars($un); ?>!</h1>
 
     <main class="goals">
         <nav class = "Goalsidebar">

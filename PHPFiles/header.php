@@ -5,7 +5,7 @@
     <nav class="nav">
         <ul>
             <li> <a class="navTab" href ="Startup.php">Home</a></li>
-            <li> <a class="navTab" href ="dashboard.php">Dashboard</a></li>
+            <!-- <li> <a class="navTab" href ="dashboard.php">Dashboard</a></li> -->
             <li> <a class="navTab" href = "BudgetScreen.php">Budgeting</a></li>
             <li> <a class="navTab" href = "futurePlanning.php">Future Planning</a></li>
         </ul>

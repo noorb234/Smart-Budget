@@ -390,6 +390,7 @@
     flex-direction: column;
     gap: 20px;
     overflow-y: auto;
+    
   }
  /*View Reports Page*/
  .reports {

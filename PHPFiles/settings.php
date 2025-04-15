@@ -53,10 +53,10 @@ $un = isset($_SESSION['username']) ? $_SESSION['username'] : 'User';
         <label class="Delete-account-label" onclick=" "><b>Delete Account</b></label>
 </main>
 </body>
-<footer class = "footer">
+<!-- <footer class = "footer">
     <div id = "footerSection">
         <p>Smart Budget<br>New York, NY<br>123-456-7890<br>© 2025 SmartBudget</p>
     </div>
     
-</footer>
+</footer> -->
 </html>

@@ -1,15 +1,13 @@
 <?php
 include 'config.php'; // Include database connection file
-try
-	{
-		$pdo = new PDO($attr, $user, $pass, $opts);
-	}
-	catch (PDOException $e)
-	{
-		throw new PDOException($e->getMessage(), (int)$e->getCode());
-	}
-	
-	session_start();
+
+try {
+    $pdo = new PDO($attr, $user, $pass, $opts);
+} catch (PDOException $e) {
+    throw new PDOException($e->getMessage(), (int)$e->getCode());
+}
+
+session_start();
 
 // Ensure user is logged in
 if (!isset($_SESSION['username'])) {
@@ -17,38 +15,67 @@ if (!isset($_SESSION['username'])) {
     exit();
 }
 
-$un = isset($_SESSION['username']) ? $_SESSION['username'] : 'User';
+$un = $_SESSION['username'];
 
-if (isset($_SESSION['username']))
-{
-	//Prepare statement to get user_id for user
-	$username = $_SESSION['username'];
-	$query = "SELECT user_id FROM users WHERE username = :username";
-	$stmt = $pdo->prepare($query);
-	$stmt->bindParam(':username', $username, PDO::PARAM_STR);
-	$stmt->execute();
-	
-	//Sets the user_id
-	$user_id = $stmt->fetchColumn();
-	$stmt->closeCursor();
+// Get user_id from session
+$query = "SELECT user_id FROM users WHERE username = :username";
+$stmt = $pdo->prepare($query);
+$stmt->bindParam(':username', $un, PDO::PARAM_STR);
+$stmt->execute();
+$user_id = $stmt->fetchColumn();
+$stmt->closeCursor();
+
+// Get selected time filter
+$timeframe = isset($_GET['timeframe']) ? $_GET['timeframe'] : 'monthly';
+
+// Set date range based on filter
+$endDate = date('Y-m-d H:i:s');
+switch ($timeframe) {
+    case 'weekly':
+        $startDate = date('Y-m-d H:i:s', strtotime('-7 days'));
+        break;
+    case 'yearly':
+        $startDate = date('Y-m-d H:i:s', strtotime('-1 year'));
+        break;
+    case 'monthly':
+        $startDate = date('Y-m-d H:i:s', strtotime('-1 month'));
+        break;
+    case 'lastYear':
+        // Set start and end dates for the entire last year
+        $startDate = date('Y-m-d H:i:s', strtotime('first day of January last year'));
+        $endDate = date('Y-m-d H:i:s', strtotime('last day of December last year'));
+        break;
+    case 'lastMonth':
+        // Set start and end dates for the previous month
+        $startDate = date('Y-m-d H:i:s', strtotime('first day of last month'));
+        $endDate = date('Y-m-d H:i:s', strtotime('last day of last month'));
+        break;
+    default:
+        $startDate = date('Y-m-d H:i:s', strtotime('-1 month'));
+        break;
 }
 
-// Fetch budget data from the database
-// typically assuming table 'budget' with 'category', 'amount', and 'date'
-$query = "SELECT c.category_name, SUM(b.current_spending) as total 
-    FROM budget b
-    JOIN category c ON b.category_id = c.category_id
-	WHERE b.user_id = :user_id
+// Fetch budget data with date filter
+$query = "SELECT c.category_name, 
+                 SUM(CASE WHEN t.transaction_type = 'EXPENSE' THEN t.transaction_amount ELSE 0 END) AS expense_total,
+                 SUM(CASE WHEN t.transaction_type = 'INCOME' THEN t.transaction_amount ELSE 0 END) AS income_total
+    FROM transaction t
+    JOIN category c ON t.category_id = c.category_id
+    WHERE t.user_id = :user_id
+    AND t.transaction_date BETWEEN :startDate AND :endDate
     GROUP BY c.category_name";
+
 $stmt = $pdo->prepare($query);
 $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+$stmt->bindParam(':startDate', $startDate);
+$stmt->bindParam(':endDate', $endDate);
 $stmt->execute();
 
 $categories = [];
-$amounts = [];
+$expenseAmounts = [];
+$incomeAmounts = [];
 $colors = [];
 
-// Define category colors
 $categoryColors = [
     'HOUSING' => '#FF5733',
     'TRANSPORTATION' => '#33FF57',
@@ -65,9 +92,10 @@ $categoryColors = [
 ];
 
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $categories[] = $row['category_name'];  // Category names
-    $amounts[] = $row['total'];        // Total amounts for each category
-    $colors[] = isset($categoryColors[$row['category_name']]) ? $categoryColors[$row['category_name']] : '#000000';  // Default color if not found
+    $categories[] = $row['category_name'];
+    $expenseAmounts[] = $row['expense_total'];
+    $incomeAmounts[] = $row['income_total'];
+    $colors[] = $categoryColors[$row['category_name']] ?? '#000000';
 }
 
 $pdo = null;
@@ -77,9 +105,9 @@ $pdo = null;
 <html lang="en">
 <head>
     <title>Budget Reports</title>
-    <link rel="stylesheet" type="text/css" href="styles.css">
-    <link rel="stylesheet" type="text/css" href="styles2.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles2.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -87,88 +115,132 @@ $pdo = null;
 </head>
 
 <body onload="includeHeader()">
-    <div include-header = "header.php"></div>
-    <h1 class = "WelcomeUser">Welcome, <?php echo htmlspecialchars($un); ?>!</h1>
+    <div include-header="header.php"></div>
+    <h1 class="WelcomeUser">Welcome, <?php echo htmlspecialchars($un); ?>!</h1>
 
-    <main class = "mainBody">
-        <nav class = "sidebar">
-            <a class="sideTab" href ="dashboard.php">Profile</a>
-            <a class="sideTab" href ="transactions.php">Transactions</a>
-            <a class="sideTab" href = "viewReports.php">View Your Reports</a>
-            <a class="sideTab" href = "BudgetScreen.php">Set A Budget</a>
+    <main class="mainBody">
+        <nav class="sidebar">
+            <a class="sideTab" href="dashboard.php">Profile</a>
+            <a class="sideTab" href="transactions.php">Transactions</a>
+            <a class="sideTab" href="viewReports.php">View Your Reports</a>
+            <a class="sideTab" href="BudgetScreen.php">Set A Budget</a>
+            <a class="sideTab" href="goal.php">Goal Planning</a>
         </nav>
-        <div class = "reports">
+
+        <div class="reports">
             <h2>Budget Report</h2>
+
+            <form method="get" style="margin-bottom: 20px;">
+                <label for="timeframe">View by: </label>
+                <select name="timeframe" id="timeframe" onchange="this.form.submit()">
+                    <option value="weekly" <?php if ($timeframe === 'weekly') echo 'selected'; ?>>This Week</option>
+                    <option value="monthly" <?php if ($timeframe === 'monthly') echo 'selected'; ?>>This Month</option>
+                    <option value="yearly" <?php if ($timeframe === 'yearly') echo 'selected'; ?>>This Year</option>
+                    <option value="lastYear" <?php if ($timeframe === 'lastYear') echo 'selected'; ?>>Last Year</option>
+                    <option value="lastMonth" <?php if ($timeframe === 'lastMonth') echo 'selected'; ?>>Last Month</option>
+                </select>
+            </form>
+
             <canvas id="pieChart"></canvas>
             <canvas id="barChart"></canvas>
-            
+
             <script>
                 const categories = <?php echo json_encode($categories); ?>;
-                const amounts = <?php echo json_encode($amounts); ?>;
+                const expenseAmounts = <?php echo json_encode($expenseAmounts); ?>;
+                const incomeAmounts = <?php echo json_encode($incomeAmounts); ?>;
                 const colors = <?php echo json_encode($colors); ?>;
-                
-                // Pie Chart
+
+                // Create the pie chart
                 new Chart(document.getElementById('pieChart'), {
                     type: 'pie',
                     data: {
                         labels: categories,
-                        datasets: [{
-                            data: amounts,
-                            backgroundColor: colors
-                        }]
+                        datasets: [
+                            {
+                                label: 'Expenses',
+                                data: expenseAmounts,
+                                backgroundColor: colors
+                            },
+                            {
+                                label: 'Income',
+                                data: incomeAmounts,
+                                backgroundColor: '#3498db' // Blue color for Income
+                            }
+                        ]
                     },
-					options: {
-						responsive: true,
-						plugins: {
-							tooltip: {
-								callbacks: {
-									// Custom label to format the tooltip as currency
-									label: function(tooltipItem) {
-										let amount = tooltipItem.raw; // Get the amount for the hovered slice
-										amount = tooltipItem.parsed;
-										return '$' + amount.toFixed(2); // Format as currency
-									}
-								}
-							}
-						}
-					}
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function (tooltipItem) {
+                                        let amount = tooltipItem.parsed;
+                                        return '$' + amount.toFixed(2);
+                                    }
+                                }
+                            }
+                        },
+                        legend: {
+                            onClick: function (event, legendItem) {
+                                const index = legendItem.datasetIndex;
+                                const chart = this.chart;
+                                const meta = chart.getDatasetMeta(index);
+                                meta.hidden = !meta.hidden;  // Toggle visibility of the dataset
+                                chart.update();
+                            }
+                        }
+                    }
                 });
-                
-                // Bar Chart
+
+                // Create the bar chart
                 new Chart(document.getElementById('barChart'), {
                     type: 'bar',
                     data: {
                         labels: categories,
-                        datasets: [{
-                            label: 'Expenses',
-                            data: amounts,
-                            backgroundColor: colors
-                        }]
+                        datasets: [
+                            {
+                                label: 'Expenses',
+                                data: expenseAmounts,
+                                backgroundColor: colors
+                            },
+                            {
+                                label: 'Income',
+                                data: incomeAmounts,
+                                backgroundColor: '#3498db' // Blue color for Income
+                            }
+                        ]
                     },
-					options: {
-						responsive: true,
-						plugins: {
-							tooltip: {
-								callbacks: {
-									// Custom label to format the tooltip as currency
-									label: function(tooltipItem) {
-										let amount = tooltipItem.parsed.y; // Get the amount for the hovered bar (vertical bar chart)
-										return '$' + amount.toFixed(2); // Format as currency
-									}
-								}
-							}
-						}
-					}
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function (tooltipItem) {
+                                        let amount = tooltipItem.parsed.y;
+                                        return '$' + amount.toFixed(2);
+                                    }
+                                }
+                            }
+                        },
+                        legend: {
+                            onClick: function (event, legendItem) {
+                                const index = legendItem.datasetIndex;
+                                const chart = this.chart;
+                                const meta = chart.getDatasetMeta(index);
+                                meta.hidden = !meta.hidden;  // Toggle visibility of the dataset
+                                chart.update();
+                            }
+                        }
+                    }
                 });
             </script>
         </div>
-</main>
-
+    </main>
 </body>
-<footer class = "footer">
-    <div id = "footerSection">
+
+<footer class="footer">
+    <div id="footerSection">
         <p>Smart Budget<br>New York, NY<br>123-456-7890<br>© 2025 SmartBudget</p>
     </div>
-    
 </footer>
 </html>

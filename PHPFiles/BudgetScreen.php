@@ -202,7 +202,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['ajax']) && isset($_PO
 	<script src="fetchCategoryBudget.js"></script>
 </head>
 
-
 <body onload="includeHeader()">
     <div include-header = "header.php"></div>
     <h1 class = "WelcomeUser">Welcome, <?php echo htmlspecialchars($un); ?>!</h1>
@@ -213,6 +212,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['ajax']) && isset($_PO
             <a class="sideTab" href ="transactions.php">Transactions</a>
             <a class="sideTab" href = "viewReports.php">View Your Reports</a>
             <a class="sideTab" href = "BudgetScreen.php">Set A Budget</a>
+            <a class="sideTab" href = "goal.php">Goal Planning</a>
         </nav>
         
         <div class = "setABudget">
