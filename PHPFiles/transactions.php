@@ -22,6 +22,16 @@ if (isset($_SESSION['username']))
 	//Sets the user_id
 	$user_id = $stmt->fetchColumn();
 	$stmt->closeCursor();
+	
+	//Prepare statement to get firstName for user
+	$query_first_name = "SELECT firstName FROM users WHERE user_id = :user_id";
+	$stmt_first_name = $pdo->prepare($query_first_name);
+	$stmt_first_name->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+	$stmt_first_name->execute();
+
+	// Fetch the user's first name
+	$first_name = $stmt_first_name->fetchColumn();
+	$stmt_first_name->closeCursor();
 }
 
 // Fetch transactions for the user
@@ -41,6 +51,64 @@ $categoryQuery = "SELECT category_id, category_name FROM category";
 $categoryStmt = $pdo->prepare($categoryQuery);
 $categoryStmt->execute();
 $categories = $categoryStmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Handle deleting a transaction
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['deleteTransaction'])) {
+    $transaction_id = $_POST['transaction_id'];
+
+    // Prepare statement to delete the transaction
+    $deleteQuery = "DELETE FROM transaction WHERE transaction_id = :transaction_id AND user_id = :user_id";
+    $stmt = $pdo->prepare($deleteQuery);
+    $stmt->bindParam(':transaction_id', $transaction_id, PDO::PARAM_INT);
+    $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+
+    if ($stmt->execute()) {
+        // Fetch the transaction details to adjust the budget
+$fetchTransactionQuery = "SELECT transaction_amount, transaction_type, category_id FROM transaction WHERE transaction_id = :transaction_id";
+$stmt = $pdo->prepare($fetchTransactionQuery);
+$stmt->bindParam(':transaction_id', $transaction_id, PDO::PARAM_INT);
+$stmt->execute();
+$transaction = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if ($transaction) {
+    // Update the budget based on the transaction type
+    $amount = $transaction['transaction_amount'];
+    $type = strtoupper($transaction['transaction_type']);
+    $category_id = $transaction['category_id'];
+
+    // Retrieve the user's budget for the current month and category
+    $budgetQuery = "SELECT budget_id, current_spending FROM budget WHERE user_id = :user_id AND category_id = :category_id";
+    $stmt = $pdo->prepare($budgetQuery);
+    $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+    $stmt->bindParam(':category_id', $category_id, PDO::PARAM_INT);
+    $stmt->execute();
+    $budget = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($budget) {
+        $newSpending = $budget['current_spending'];
+        
+        if ($type == 'EXPENSE') {
+            // Subtract the expense from current_spending
+            $newSpending -= $amount;
+        } else if ($type == 'INCOME') {
+            // Add the income back to current_spending
+            $newSpending += $amount;
+        }
+
+        // Update the budget
+        $updateBudgetQuery = "UPDATE budget SET current_spending = :newSpending WHERE budget_id = :budget_id";
+        $stmt = $pdo->prepare($updateBudgetQuery);
+        $stmt->bindParam(':newSpending', $newSpending, PDO::PARAM_STR);
+        $stmt->bindParam(':budget_id', $budget['budget_id'], PDO::PARAM_INT);
+        $stmt->execute();
+    }
+}
+        header('Location: transactions.php');
+        exit();
+    } else {
+        echo "Error: Could not delete the transaction.";
+    }
+}
 
 // Handle adding a new transaction
  if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['addTransaction'])) {
@@ -148,7 +216,7 @@ $categories = $categoryStmt->fetchAll(PDO::FETCH_ASSOC);
 
 <body onload="includeHeader()">
     <div include-header = "header.php"></div>
-    <h1 class = "WelcomeUser">Welcome, <?php echo htmlspecialchars($un); ?>!</h1>
+    <h1 class = "WelcomeUser">Welcome, <?php echo htmlspecialchars($first_name); ?>!</h1>
 
     <main class = "mainBody">
         <nav class = "sidebar">
@@ -181,6 +249,12 @@ $categories = $categoryStmt->fetchAll(PDO::FETCH_ASSOC);
                     <td><?php echo htmlspecialchars($transaction['category_name']); ?></td>
                     <td><?php echo htmlspecialchars($transaction['note']); ?></td>
                     <td><?php echo $transaction['is_recurring'] ? 'Yes' : 'No'; ?></td>
+					<td>
+						<form method="POST" style="display:inline;">
+							<input type="hidden" name="transaction_id" value="<?php echo $transaction['transaction_id']; ?>">
+							<button type="submit" name="deleteTransaction" onclick="return confirm('Are you sure you want to delete this transaction?');">Delete</button>
+						</form>
+					</td>
                 </tr>
             <?php endforeach; ?>
         </table>

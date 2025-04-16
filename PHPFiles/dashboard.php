@@ -26,6 +26,16 @@ if (isset($_SESSION['username']))
 	$user_id = $stmt->fetchColumn();
 	$stmt->closeCursor();
 	
+	//Prepare statement to get firstName for user
+	$query_first_name = "SELECT firstName FROM users WHERE user_id = :user_id";
+	$stmt_first_name = $pdo->prepare($query_first_name);
+	$stmt_first_name->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+	$stmt_first_name->execute();
+
+	// Fetch the user's first name
+	$first_name = $stmt_first_name->fetchColumn();
+	$stmt_first_name->closeCursor();
+	
 	// Prepare statement to get the user's budget for the current month
     $query_budget = "SELECT monthly_limit FROM budget WHERE user_id = :user_id AND budget_month = :current_month";
     $stmt_budget = $pdo->prepare($query_budget);
@@ -78,7 +88,7 @@ if (isset($_SESSION['username']))
 
 <body onload="includeHeader()">
     <div include-header = "header.php"></div>
-    <h1 class = "WelcomeUser">Welcome, <?php echo htmlspecialchars($un); ?>!</h1>
+    <h1 class = "WelcomeUser">Welcome, <?php echo htmlspecialchars($first_name); ?>!</h1>
 
     <main class = "mainBody">
         <nav class = "sidebar">

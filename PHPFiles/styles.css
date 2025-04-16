@@ -164,12 +164,12 @@ label[for="username"], label[for="password"] {
 
 }
 
-#noAccount {
+#noAccount, #forgotPasswordLink {
     display: flex;
     justify-content: center;
     width: 100%;
 }
-#noAccount a{
+#noAccount a, #forgotPasswordLink a{
     text-align: left;
     text-decoration: underline;
     font-family:sans-serif;
@@ -181,7 +181,7 @@ label[for="username"], label[for="password"] {
     margin-top: 10px;
     transition: color 0.3s;
 }
-#noAccount:hover a{
+#noAccount:hover a, #forgotPasswordLink:hover a{
     color: #084776;
 }
 /*Signup Page*/

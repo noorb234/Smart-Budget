@@ -1,8 +1,21 @@
 <?php
+include 'config.php';
 
 session_start();
 
 $un = isset($_SESSION['username']) ? $_SESSION['username'] : 'User';
+
+if (isset($_SESSION['username'])) {
+	$username = $_SESSION['username'];
+	$query_first_name = "SELECT firstName FROM users WHERE username = :username";
+	$stmt_first_name = $pdo->prepare($query_first_name);
+    $stmt_first_name->bindParam(':username', $username, PDO::PARAM_STR);
+    $stmt_first_name->execute();
+
+    // Fetches the first name
+    $first_name = $stmt_first_name->fetchColumn();
+    $stmt_first_name->closeCursor();
+}
 ?>
 
 <!DOCTYPE html>
@@ -20,7 +33,7 @@ $un = isset($_SESSION['username']) ? $_SESSION['username'] : 'User';
 <body onload="includeHeader()">
     <div include-header = "header.php"></div>
     <main class = settings>
-        <label class="welcome-user-label"><b>Welcome, <?php echo htmlspecialchars($un); ?>!</b></label><br>
+        <label class="welcome-user-label"><b>Welcome, <?php echo htmlspecialchars($first_name); ?>!</b></label><br>
         <label class="NameScreen-Label"> <b>Settings </b> </label>
         <label class="Notis-Label"><b>Notifications Preferences:  </b></label>
 

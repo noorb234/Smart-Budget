@@ -24,6 +24,7 @@
         </form>
         <!-------------------Login Form-------------------->
 
+			<p id="forgotPasswordLink"><a href="password.php">Forgot your password? Click here to reset it.</a></p>
             <p id = "noAccount"><a href = "signup.php">Don't have an account? Click here to get started!</a></p>
         </div>
     </main>

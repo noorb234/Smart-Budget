@@ -51,6 +51,34 @@ function fetchCategoryBudget(categoryId) {
     xhr.send();
 }
 
+//Function to clear the budget via AJAX
+function clearBudget() {
+    const categorySelect = document.getElementById('category');
+    const categoryId = categorySelect.value;
+
+    // Check if a category is selected
+    if (categoryId) {
+        if (confirm("Are you sure you want to clear the budget for this category?")) {
+            // Send an AJAX request to clear the budget
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "clear_budget.php", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    // If successful, update the budget value on the page
+                    document.getElementById('category-budget').innerText = "$0.00";
+                    alert("The budget has been cleared.");
+                } else {
+                    alert("Error clearing the budget.");
+                }
+            };
+            xhr.send("category=" + categoryId);
+        }
+    } else {
+        alert("Please select a category first.");
+    }
+}
+
 // Function to save the budget via AJAX
 function saveBudget() {
     const budgetValue = document.getElementById('edit-budget-input').value;

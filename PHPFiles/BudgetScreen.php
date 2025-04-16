@@ -63,6 +63,16 @@ if (isset($_SESSION['username']))
 	//Sets the user_id
 	$user_id = $stmt->fetchColumn();
 	$stmt->closeCursor();
+	
+	//Prepare statement to get firstName for user
+	$query_first_name = "SELECT firstName FROM users WHERE user_id = :user_id";
+	$stmt_first_name = $pdo->prepare($query_first_name);
+	$stmt_first_name->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+	$stmt_first_name->execute();
+
+	// Fetch the user's first name
+	$first_name = $stmt_first_name->fetchColumn();
+	$stmt_first_name->closeCursor();
 		
 	//Prepare statement to get the total monthly budget for the user
 	$query_total_budget = "SELECT SUM(monthly_limit) AS total_budget from budget WHERE user_id = :user_id AND budget_month = :current_month";
@@ -204,7 +214,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['ajax']) && isset($_PO
 
 <body onload="includeHeader()">
     <div include-header = "header.php"></div>
-    <h1 class = "WelcomeUser">Welcome, <?php echo htmlspecialchars($un); ?>!</h1>
+    <h1 class = "WelcomeUser">Welcome, <?php echo htmlspecialchars($first_name); ?>!</h1>
 
     <main class = "mainBody">
     <nav class = "sidebar">
@@ -248,6 +258,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['ajax']) && isset($_PO
 				<div class="button-group">
 					<button class="button1" type="button" onclick="editBudget()">Edit Budget</button>
 					<button class="button2" type="submit" style="display: none;" id="save-budget-btn">Save Budget</button>
+					<button class="button3" type="button" onclick="clearBudget()">Clear Budget</button>
 				</div>
 			</form>
         </div>

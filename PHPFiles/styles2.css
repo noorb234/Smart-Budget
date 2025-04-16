@@ -344,7 +344,7 @@
     margin-top: 20px;
 }
 
-.button1, .button2 {
+.button1, .button2, .button3 {
     background-color: #008CBA;
     color: white;
     padding: 10px 20px;
@@ -375,7 +375,7 @@
     }
 }
 
-.button1:hover, .button2:hover {
+.button1:hover, .button2:hover, .button3:hover {
     background-color: #006494;
 } 
 
