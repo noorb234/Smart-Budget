@@ -228,7 +228,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['ajax']) && isset($_PO
         <div class = "setABudget">
 
             <label class="your-budget"><b>Your Budget for the Month: <?php echo isset($total_budget) ? '$' . number_format($total_budget, 2) : '$0.00'; ?></b></label><br>
-            
+            <div class = "allBudgets">
+				<label class="your-budget"><b>All Budgets:</b></label>
+				<table class="budget-table">
+					<thead>
+						<tr>
+							<th>Category</th>
+							<th>Budget Amount</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php
+						// Fetch all budgets for the user
+						$query_all_budgets = "SELECT c.category_name, b.monthly_limit FROM budget b JOIN category c ON b.category_id = c.category_id WHERE b.user_id = :user_id AND b.budget_month = :current_month";
+						$stmt_all_budgets = $pdo->prepare($query_all_budgets);
+						$stmt_all_budgets->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+						$stmt_all_budgets->bindParam(':current_month', $current_month, PDO::PARAM_STR);
+						$stmt_all_budgets->execute();
+
+						while ($row = $stmt_all_budgets->fetch(PDO::FETCH_ASSOC)) {
+							echo "<tr><td>" . htmlspecialchars($row['category_name']) . "</td><td>$" . number_format($row['monthly_limit'], 2) . "</td></tr>";
+						}
+						?>
+					</tbody>
+				</table>
+			</div>
              <form id="budgetForm" method="POST">
 				<label class="Category-label"><b>Category: </b></label>
 				<select required id="category" name="category" onchange="submitForm()">

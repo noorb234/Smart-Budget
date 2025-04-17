@@ -32,44 +32,51 @@ if (isset($_SESSION['username'])) {
 </head>
 <body onload="includeHeader()">
     <div include-header = "header.php"></div>
-    <main class = settings>
-        <label class="welcome-user-label"><b>Welcome, <?php echo htmlspecialchars($first_name); ?>!</b></label><br>
-        <label class="NameScreen-Label"> <b>Settings </b> </label>
-        <label class="Notis-Label"><b>Notifications Preferences:  </b></label>
+    <main class="settings-container">
+  <h2 class="page-title">Settings</h2>
 
-        <form> 
-            <input type="checkbox" id="Balancecheckbox">
-            <label class="BalanceLabel">Balance</label> 
-            <input type="checkbox" id="BudgePlancheckbox">
-            <label class="BudgePlanLabel">Budget Plan</label> 
-            <input type="checkbox" id="Transactionscheckbox">
-            <label class="TransactionsLabel">Transactions</label> 
-        </form>
+  <section class="settings-section">
+    <h3>Notification Preferences</h3>
+    <div class="checkbox-group">
+      <label><input type="checkbox" id="Balancecheckbox"> Balance</label>
+      <label><input type="checkbox" id="BudgePlancheckbox"> Budget Plan</label>
+      <label><input type="checkbox" id="Transactionscheckbox"> Transactions</label>
+    </div>
+  </section>
 
-        <form > 
-            <input type="checkbox" id="Appareancecheckbox">
-            <label class="AppareanceLabel"><b>Appareance</b></label> 
-        </form>
+  <section class="settings-section">
+    <h3>Appearance</h3>
+    <label><input type="checkbox" id="Appareancecheckbox"> Enable Dark Mode</label>
+  </section>
 
-        <form>
-            <Label class="currentPasswordLabel"><b>Enter Current Password </b></Label>
-            <input class="currentPasswordText" type="password"></input>
-            <Label class="changePasswordLabel"><b>Enter New Password </b></Label>
-            <input class="changePasswordText" type="password"></input>
-            <Label class="confirmPasswordLabel"><b>Confirm New Password </b></Label>
-            <input class="confirmPasswordText" type="password"></input>
-        </form>
-    
-        <button class="ResetDefaultButton" onclick=" "> Reset to Default </button>
-        <button class="saveButton" onclick=" "> Save </button>
-        <label class="logOut-label" onclick=" "><b>Log Out</b></label>
-        <label class="Delete-account-label" onclick=" "><b>Delete Account</b></label>
+  <section class="settings-section">
+    <h3>Change Password</h3>
+    <div class="password-group">
+      <label>Current Password</label>
+      <input type="password" class="input">
+      <label>New Password</label>
+      <input type="password" class="input">
+      <label>Confirm Password</label>
+      <input type="password" class="input">
+    </div>
+  </section>
+
+  <div class="settings-actions">
+    <button class="btn reset-btn">Reset to Default</button>
+    <button class="btn save-btn">Save Changes</button>
+  </div>
+
+  <div class="danger-zone">
+    <span class="logout">Log Out</span>
+    <span class="delete-account">Delete Account</span>
+  </div>
 </main>
+
 </body>
-<!-- <footer class = "footer">
+<footer class = "footer">
     <div id = "footerSection">
         <p>Smart Budget<br>New York, NY<br>123-456-7890<br>© 2025 SmartBudget</p>
     </div>
     
-</footer> -->
+</footer>
 </html>
