@@ -1,14 +1,11 @@
 <?php
 require_once 'config.php';
 	
-	try
-	{
-		$pdo = new PDO($attr, $user, $pass, $opts);
-	}
-	catch (PDOException $e)
-	{
-		throw new PDOException($e->getMessage(), (int)$e->getCode());
-	}
+try {
+    $pdo = new PDO($attr, $user, $pass, $opts);
+} catch (PDOException $e) {
+    throw new PDOException($e->getMessage(), (int)$e->getCode());
+}
 session_start();
 
 $un = isset($_SESSION['username']) ? $_SESSION['username'] : 'User';
@@ -41,13 +38,11 @@ if (isset($_SESSION['username'])) {
     .goals {
         margin-top: 0px;
         display:  flex;
-        /* background-color: aqua; */
         gap: 20px;
     }
 
     /***********************Side Bar*************************/ 
     .Goalsidebar{
-        /* top: 300px; */
         width: 250px;
         height: 750px;
         margin-left: 25px;
@@ -89,7 +84,6 @@ if (isset($_SESSION['username'])) {
     /***********************Text Fields *************************/  
     #thingToBuyTextField,#PriceTextField,
     #timeFrameTextField,#AmountToSaveTextField,#FrecuencyTextField{
-        align-items: center  ;
         width: 200px;
         height: 30px;
         padding: 10px;
@@ -183,14 +177,6 @@ if (isset($_SESSION['username'])) {
         margin-top: 100px;
         color:#0A599D;
         font-family: inter, sans-serif;
-        /* font-size: 20px;
-        color:#0A599D;
-        font-weight: bold;
-        display: block;
-        font-family:sans-serif;
-        margin-top:100px; */
-        /* margin-bottom: 0px;
-        margin-left: 200px; */ 
     }
 
     /************************** Labels **********************/
@@ -204,7 +190,6 @@ if (isset($_SESSION['username'])) {
         height: 500px;
         margin-bottom: 0px;
         gap: 5px;
-        /* background-color: brown; */
     }
 
     .GoalFormDiv{
@@ -216,7 +201,6 @@ if (isset($_SESSION['username'])) {
         margin-bottom: 0px;
         border-radius: 30px;
         gap: 10px;
-        /* background-color: #E2F1FD; */
         padding-left: 40px;  
         
      }
@@ -229,7 +213,6 @@ if (isset($_SESSION['username'])) {
         margin-bottom: 0px;
         border-radius: 30px;
         gap: 10px;
-        /* background-color:rgb(223, 67, 28); */
         padding-left: 40px;  
      }
 
@@ -318,6 +301,18 @@ document.getElementById("GoalSubmitButton").addEventListener("click", async func
     const frequency = document.getElementById("FrecuencyTextField").value;
 
     const responseLabel = document.querySelector(".AIResponseLabel");
+
+    // Validation
+    if (!item || !price || !amount || !time || !frequency) {
+        responseLabel.innerText = "All fields are required.";
+        return;
+    }
+
+    if (isNaN(price) || isNaN(amount)) {
+        responseLabel.innerText = "Price and Amount to Save must be valid numbers.";
+        return;
+    }
+
     responseLabel.innerText = "Generating advice...";
 
     try {
@@ -341,7 +336,5 @@ document.getElementById("GoalSubmitButton").addEventListener("click", async func
     }
 });
     </script>
-</body>
+</body
 
-
-</html>
