@@ -25,7 +25,7 @@ $stmt->execute();
 $user_id = $stmt->fetchColumn();
 $stmt->closeCursor();
 
-//Prepare statement to get firstName for user
+// Prepare statement to get firstName for user
 $query_first_name = "SELECT firstName FROM users WHERE user_id = :user_id";
 $stmt_first_name = $pdo->prepare($query_first_name);
 $stmt_first_name->bindParam(':user_id', $user_id, PDO::PARAM_INT);
@@ -86,6 +86,8 @@ $expenseAmounts = [];
 $incomeAmounts = [];
 $colors = [];
 
+$totalExpenses = 0; // Variable to store the total expense for the timeframe
+
 $categoryColors = [
     'HOUSING' => '#FF5733',
     'TRANSPORTATION' => '#33FF57',
@@ -106,6 +108,9 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $expenseAmounts[] = $row['expense_total'];
     $incomeAmounts[] = $row['income_total'];
     $colors[] = $categoryColors[$row['category_name']] ?? '#000000';
+    
+    // Sum the expense amounts to calculate total expenses
+    $totalExpenses += $row['expense_total'];
 }
 
 $pdo = null;
@@ -150,6 +155,8 @@ $pdo = null;
                     <option value="lastMonth" <?php if ($timeframe === 'lastMonth') echo 'selected'; ?>>Last Month</option>
                 </select>
             </form>
+
+            <h3>Total Monthly Expenses: $<?php echo number_format($totalExpenses, 2); ?></h3> <!-- Display total monthly expense -->
 
             <canvas id="pieChart"></canvas>
             <canvas id="barChart"></canvas>
