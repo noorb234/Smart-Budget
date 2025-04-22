@@ -227,10 +227,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['ajax']) && isset($_PO
         
         <div class = "setABudget">
 
-            <label class="your-budget"><b>Your Budget for the Month: <?php echo isset($total_budget) ? '$' . number_format($total_budget, 2) : '$0.00'; ?></b></label><br>
+            <label class="your-budget">
+				<b>Your Budget for the Month: <span id="total-budget"><?php echo isset($total_budget) ? '$' . number_format($total_budget, 2) : '$0.00'; ?></span></b>
+			</label><br>
             <div class = "allBudgets">
 				<label class="your-budget"><b>All Budgets:</b></label>
-				<table class="budget-table">
+				<table id="budget-table" class="budget-table">
 					<thead>
 						<tr>
 							<th>Category</th>
