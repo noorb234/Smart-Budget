@@ -53,11 +53,13 @@ if (isset($_SESSION['username'])) {
     <h3>Change Password</h3>
     <div class="password-group">
       <label>Current Password</label>
-      <input type="password" class="input">
+      <input type="password" id="currentPassword" class="input">
       <label>New Password</label>
-      <input type="password" class="input">
+      <input type="password" id="newPassword" class="input">
       <label>Confirm Password</label>
-      <input type="password" class="input">
+      <input type="password" id="confirmPassword" class="input">
+
+      <span id="passwordMismatchWarning" style="color: red; display: none;">New passwords do not match.</span>
     </div>
   </section>
 
@@ -72,6 +74,34 @@ if (isset($_SESSION['username'])) {
   </div>
 </main>
 
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const newPassword = document.getElementById("newPassword");
+    const confirmPassword = document.getElementById("confirmPassword");
+    const warning = document.getElementById("passwordMismatchWarning");
+    const saveBtn = document.querySelector(".save-btn");
+
+    function checkPasswordsMatch() {
+      if (confirmPassword.value === "") {
+        warning.style.display = "none";
+        confirmPassword.style.border = "";
+        saveBtn.disabled = false;
+      } else if (newPassword.value === confirmPassword.value) {
+        warning.style.display = "none";
+        confirmPassword.style.border = "2px solid green";
+        saveBtn.disabled = false;
+      } else {
+        warning.style.display = "inline";
+        confirmPassword.style.border = "2px solid red";
+        saveBtn.disabled = true;
+      }
+    }
+
+    newPassword.addEventListener("input", checkPasswordsMatch);
+    confirmPassword.addEventListener("input", checkPasswordsMatch);
+  });
+</script>
+
 </body>
 <footer class = "footer">
     <div id = "footerSection">
@@ -79,4 +109,7 @@ if (isset($_SESSION['username'])) {
     </div>
     
 </footer>
+
+
+
 </html>
