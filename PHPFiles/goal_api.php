@@ -3,7 +3,7 @@
 header("Content-Type: application/json");
 
 // Replace with your actual OpenAI API key
-$apiKey = "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"; // 👈 Replace with your key
+$apiKey = ""; // 👈 Replace with your key
 
 // Get the raw JSON POST input and decode it
 $input = json_decode(file_get_contents("php://input"), true);
