@@ -71,3 +71,43 @@ function resetPassword(event) {
         alert('An error occurred. Please try again later.');
     });
 }
+
+// Live password match check
+document.addEventListener("DOMContentLoaded", () => {
+    const passwordField = document.getElementById("ResetPasswordLabelField");
+    const confirmPasswordField = document.getElementById("ConfirmPasswordLabelField");
+    const warning = document.getElementById("passwordMismatchWarning");
+    const resetBtn = document.getElementById("resetPassword");
+
+    function checkPasswordsMatch() {
+        if (confirmPasswordField.value === "") {
+            warning.style.display = "none";
+            confirmPasswordField.style.border = "";
+            resetBtn.disabled = false;
+        } else if (passwordField.value === confirmPasswordField.value) {
+            warning.style.display = "none";
+            confirmPasswordField.style.border = "2px solid green";
+            resetBtn.disabled = false;
+        } else {
+            warning.style.display = "inline";
+            confirmPasswordField.style.border = "2px solid red";
+            resetBtn.disabled = true;
+        }
+    }
+
+    passwordField.addEventListener("input", checkPasswordsMatch);
+    confirmPasswordField.addEventListener("input", checkPasswordsMatch);
+});
+
+// Toggle password visibility
+document.querySelectorAll('.toggle-password').forEach(icon => {
+    icon.addEventListener('click', () => {
+        const targetId = icon.getAttribute('data-target');
+        const passwordInput = document.getElementById(targetId);
+
+        const isPassword = passwordInput.type === 'password';
+        passwordInput.type = isPassword ? 'text' : 'password';
+        icon.textContent = isPassword ? '🔐' : '🔓'; 
+    
+    });
+});

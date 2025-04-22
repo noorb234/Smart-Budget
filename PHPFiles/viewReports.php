@@ -1,5 +1,5 @@
 <?php
-include 'config.php'; 
+include 'config.php'; // Include database connection file
 
 try {
     $pdo = new PDO($attr, $user, $pass, $opts);
@@ -24,16 +24,6 @@ $stmt->bindParam(':username', $un, PDO::PARAM_STR);
 $stmt->execute();
 $user_id = $stmt->fetchColumn();
 $stmt->closeCursor();
-
-// Prepare statement to get firstName for user
-$query_first_name = "SELECT firstName FROM users WHERE user_id = :user_id";
-$stmt_first_name = $pdo->prepare($query_first_name);
-$stmt_first_name->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-$stmt_first_name->execute();
-
-// Fetch the user's first name
-$first_name = $stmt_first_name->fetchColumn();
-$stmt_first_name->closeCursor();
 
 // Get selected time filter
 $timeframe = isset($_GET['timeframe']) ? $_GET['timeframe'] : 'monthly';
@@ -86,8 +76,6 @@ $expenseAmounts = [];
 $incomeAmounts = [];
 $colors = [];
 
-$totalExpenses = 0; // Variable to store the total expense for the timeframe
-
 $categoryColors = [
     'HOUSING' => '#FF5733',
     'TRANSPORTATION' => '#33FF57',
@@ -108,9 +96,6 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $expenseAmounts[] = $row['expense_total'];
     $incomeAmounts[] = $row['income_total'];
     $colors[] = $categoryColors[$row['category_name']] ?? '#000000';
-    
-    // Sum the expense amounts to calculate total expenses
-    $totalExpenses += $row['expense_total'];
 }
 
 $pdo = null;
@@ -131,7 +116,7 @@ $pdo = null;
 
 <body onload="includeHeader()">
     <div include-header="header.php"></div>
-    <h1 class="WelcomeUser">Welcome, <?php echo htmlspecialchars($first_name); ?>!</h1>
+    <h1 class="WelcomeUser">Welcome, <?php echo htmlspecialchars($un); ?>!</h1>
 
     <main class="mainBody">
         <nav class="sidebar">
@@ -156,8 +141,6 @@ $pdo = null;
                 </select>
             </form>
 
-            <h3>Total Monthly Expenses: $<?php echo number_format($totalExpenses, 2); ?></h3> <!-- Display total monthly expense -->
-
             <canvas id="pieChart"></canvas>
             <canvas id="barChart"></canvas>
 
@@ -167,7 +150,7 @@ $pdo = null;
                 const incomeAmounts = <?php echo json_encode($incomeAmounts); ?>;
                 const colors = <?php echo json_encode($colors); ?>;
 
-                // Create the pie chart
+            
                 new Chart(document.getElementById('pieChart'), {
                     type: 'pie',
                     data: {
@@ -202,14 +185,13 @@ $pdo = null;
                                 const index = legendItem.datasetIndex;
                                 const chart = this.chart;
                                 const meta = chart.getDatasetMeta(index);
-                                meta.hidden = !meta.hidden;  // Toggle visibility of the dataset
+                                meta.hidden = !meta.hidden;  
                                 chart.update();
                             }
                         }
                     }
                 });
 
-                // Create the bar chart
                 new Chart(document.getElementById('barChart'), {
                     type: 'bar',
                     data: {
@@ -244,7 +226,7 @@ $pdo = null;
                                 const index = legendItem.datasetIndex;
                                 const chart = this.chart;
                                 const meta = chart.getDatasetMeta(index);
-                                meta.hidden = !meta.hidden;  // Toggle visibility of the dataset
+                                meta.hidden = !meta.hidden; 
                                 chart.update();
                             }
                         }

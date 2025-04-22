@@ -7,9 +7,10 @@ require_once 'config.php';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reset Password</title>
-    <link rel="stylesheet" type="text/css" href="styles3.css">
+    
     <link rel="stylesheet" type="text/css" href="styles.css">
     <link rel="stylesheet" type="text/css" href="resetPassword.css">
+   
 </head>
 <body id="forgotPasswordBody">
 
@@ -17,8 +18,9 @@ require_once 'config.php';
     <a href="Startup.php">
         <img src="logo.png" alt="Logo">
     </a>
-</header>
 
+</header>
+<div class="page-wrapper">
 <main id="ForgotPassword">
     <form id="findUsernameForm" onsubmit="lookupUsername(event)">
         <div class="findUsernamediv">
@@ -36,12 +38,28 @@ require_once 'config.php';
 			<label class="secondQuestionLabel" id="secondQuestionLabel">Second Question goes here</label>
 			<input required type="text" id="secondAnswerField" placeholder="Answer">
 
-            <label class="ResetPasswordLabel">Reset Password:</label>
-            <input required type="text" id="ResetPasswordLabelField" placeholder="New Password">
+            <label class="ResetPasswordLabel">New Password:</label>
+            <div class="password-container">
+                <input required type="password" id="ResetPasswordLabelField" placeholder="New Password">
+                <span class="toggle-password" data-target="ResetPasswordLabelField">🔓</span>
+            
+            </div>
+
+            <label class="ConfirmPasswordLabel">Confirm Password:</label>
+
+            <div class="password-container">
+            
+            <input required type="password" id="ConfirmPasswordLabelField" placeholder="Re-enter Password">
+            <span class="toggle-password" data-target="ConfirmPasswordLabelField">🔓</span>
+            </div>
+
+            <span id="passwordMismatchWarning" style="color: red; display: none;">Passwords do not match.</span>
+
             <button id="resetPassword" type="button">Reset Password</button>
-        </div>
+        </>
     </form>
 </main>
+</div>
 
 <footer class="footer">
     <div id="footerSection">
