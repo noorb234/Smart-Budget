@@ -16,8 +16,23 @@ $time = $input['time'] ?? '';
 $frequency = $input['frequency'] ?? '';
 
 // Build the prompt for OpenAI
-$prompt = "I want to buy '$item' which costs $price. I can save $amount $frequency over $time. 
-Give me budgeting advice and estimate when I can buy it.";
+$prompt = "
+You are a financial advisor helping a user make a smart plan for a purchase.
+
+Here is the information:
+- Item: \"$item\"
+- Item Price: \$$price
+- Saving Amount: \$$amount per $frequency
+- Timeframe Goal: $time
+
+Additionally, provide the following:
+1. Realistic estimate of when the user can afford the item based on their savings.
+2. Suggest 2–3 personalized budgeting tips to help them reach their goal faster.
+3. Mention any financial red flags if applicable.
+
+Speak clearly and concisely, like a friendly human advisor. 
+If the savings plan won't realistically meet the goal, explain why and suggest alternatives.
+";
 
 // OpenAI API endpoint and payload
 $url = "https://api.openai.com/v1/chat/completions";
@@ -28,7 +43,8 @@ $data = [
         ["role" => "system", "content" => "You are a helpful financial advisor providing budgeting advice."],
         ["role" => "user", "content" => $prompt]
     ],
-    "temperature" => 0.7
+    "temperature" => 0.4,
+    "max_tokens" => 1000
 ];
 
 $headers = [
@@ -54,3 +70,4 @@ if ($response === false) {
 }
 
 curl_close($ch);
+?>

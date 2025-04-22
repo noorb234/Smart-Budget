@@ -266,6 +266,13 @@
     color:#0A599D;
     font-family: inter, sans-serif;
 }
+
+h2.MonthlyExpensesLabel {
+  color: black;
+  font-family: 'Inter', sans-serif;
+  font-size: 1.5em;
+  margin-top: 20px;
+}
   .dashboard {
     flex: 1;
     background-color: var(--light-blue);
@@ -696,3 +703,196 @@ body {
 .delete-account:hover {
   text-decoration: underline;
 }
+.goals {
+  margin-top: 0px;
+  display:  flex;
+  gap: 20px;
+}
+
+
+/************************** Goal Screen **************************/
+/***********************Side Bar*************************/ 
+.Goalsidebar{
+  width: 250px;
+  height: 750px;
+  margin-left: 25px;
+  background-color: var(--light-blue);
+  border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  transition: all var(--transition-speed) ease;
+  font-family: sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+}
+.GoalssideTab {
+display: flex;
+align-items: center;
+gap: 12px;
+text-decoration: none;
+color: var(--primary-color);
+font-weight: 600;
+font-size: 18px;
+padding: 12px 16px;
+border-radius: 8px;
+transition: all var(--transition-speed);
+}
+.GoalssideTab i {
+  font-size: 20px;
+}
+
+.GoalssideTab:hover {
+  background-color: var(--primary-color);
+  color: white;
+  transform: translateX(5px);
+}
+/***********************Side Bar*************************/
+
+/***********************Text Fields *************************/  
+#thingToBuyTextField,#PriceTextField,
+#timeFrameTextField,#AmountToSaveTextField,#FrecuencyTextField{
+  width: 200px;
+  height: 30px;
+  padding: 10px;
+  margin-bottom: 0px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  gap: 5px;
+}
+
+/***********************Text Fields *************************/  
+
+/*********************** Buttons *************************/  
+#GoalSubmitButton{
+
+  border-radius: 30px;
+  background-color: #0A599D;
+  width: 40%;
+  height: 40px;
+  margin-top: 0px;
+  border: none;
+  cursor: pointer;
+  color: whitesmoke;
+  text-decoration: none;
+  font-family: sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s;
+  
+}
+
+/*********************** Buttons *************************/ 
+
+/************************** Labels **********************/ 
+.WelcomeGoalLabel{
+
+  font-size: 30px;
+  color:#0A599D;
+  font-weight: bold;
+  display: block;
+  font-family:sans-serif;
+  margin-top: 0px;
+  margin-bottom: 3px;
+}
+.ItemGoalLabel{
+  
+  font-size: 13px;
+  color:#0A599D;
+  font-weight: bold;
+  display: block;
+  font-family:sans-serif;
+  margin-top: 0px;
+  margin-bottom: 3px;
+  padding-left: 100px;
+}
+
+.NameGoalLabel,.PriceLabel,.GoalPriceLabel,.AmountToSaveLabel,.FrecuencyLabel{
+  font-size: 18px;
+  color:#0A599D;
+  font-weight: bold;
+  display: block;
+  font-family:sans-serif;
+  margin-top: 0px;
+  margin-bottom: 3px;
+  
+}
+.InformationLabel{
+  font-size: 23px;
+  color:#0A599D;
+  font-weight: bold;
+  display: block;
+  text-align: center;
+  font-family:sans-serif;
+  margin-top:15px;
+  margin-bottom: 0px;
+  margin-left: 230px;
+}
+.AIResponseLabel{
+  font-size: 15px;
+  color:black;
+  font-weight: bold;
+  display: block;
+  text-align: center;
+  font-family:sans-serif;
+  margin-top:30px;
+  margin-bottom: 0px;
+  margin-left: 200px;
+}
+.WelcomeUserGoalsLabel{
+  padding: 40px 30px 10px 30px;
+  margin-top: 100px;
+  color:#0A599D;
+  font-family: inter, sans-serif;
+}
+
+/************************** Labels **********************/
+
+/************************** Containers( div<>) & Form **********************/ 
+
+.GoalsForm{
+  display: grid ;
+  align-items: center  ;
+  width: 540px;
+  height: 500px;
+  margin-bottom: 0px;
+  gap: 5px;
+}
+
+.GoalFormDiv{
+  display: grid;
+  align-items: flex-start; 
+  justify-items: flex-start;  
+  width: 500px;
+  height: 520px;
+  margin-bottom: 0px;
+  border-radius: 30px;
+  gap: 10px;
+  padding-left: 40px;  
+  
+}
+.AIresponseArea{
+  display: flex;  
+  flex-direction: column;
+  justify-content: left;  
+  width: 1000px;
+  height: 700px;
+  margin-bottom: 0px;
+  border-radius: 30px;
+  gap: 10px;
+  padding-left: 40px; 
+
+}
+
+.goalsContrainer {
+display: flex;  
+flex-direction: column;
+justify-content: left;
+align-items: left;  
+flex-grow: 1; 
+padding-left: 20px; 
+}
+/************************** Containers ( div<>) **********************/ 

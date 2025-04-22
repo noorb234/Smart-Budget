@@ -16,6 +16,12 @@ if (!isset($_SESSION['username'])) {
 }
 
 $un = $_SESSION['username'];
+$query_first_name = "SELECT firstName FROM users WHERE username = :username";
+$stmt_first_name = $pdo->prepare($query_first_name);
+$stmt_first_name->bindParam(':username', $un, PDO::PARAM_STR);
+$stmt_first_name->execute();
+$first_name = $stmt_first_name->fetchColumn();
+$stmt_first_name->closeCursor();
 
 // Get user_id from session or DB
 $query = "SELECT user_id FROM users WHERE username = :username";
@@ -112,7 +118,7 @@ $pdo = null;
 
 <body onload="includeHeader()">
     <div include-header="header.php"></div>
-    <h1 class="WelcomeUser">Welcome, <?php echo htmlspecialchars($un); ?>!</h1>
+    <h1 class = "WelcomeUser">Welcome, <?php echo htmlspecialchars($first_name); ?>!</h1>
 
     <main class="mainBody">
         <nav class="sidebar">

@@ -84,8 +84,9 @@ if (isset($_SESSION['username']))
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <meta charset="UTF-8">
     <script src="include.js"></script>
+	
 </head>
-
+ <!-- #region -->
 <body onload="includeHeader()">
     <div include-header = "header.php"></div>
     <h1 class = "WelcomeUser">Welcome, <?php echo htmlspecialchars($first_name); ?>!</h1>
@@ -106,7 +107,7 @@ if (isset($_SESSION['username']))
 					<a href="BudgetScreen.php" class="set-budget-link">Set your budget now!</a>
 				</p>
 			<?php endif; ?>
-            <h2>Monthly Expense Total: <?php echo isset($total_spending) ? '$' . number_format($total_spending, 2) : '$0.00'; ?></h2>
+            <h2 class="MonthlyExpensesLabel">Monthly Expense Total: <?php echo isset($total_spending) ? '$' . number_format($total_spending, 2) : '$0.00'; ?></h2>
             <!-----Inserting total------>
             <h2>Recent Transactions:</h2>
             <table>
