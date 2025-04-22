@@ -17,7 +17,7 @@ if (!isset($_SESSION['username'])) {
 
 $un = $_SESSION['username'];
 
-// Get user_id from session
+// Get user_id from session or DB
 $query = "SELECT user_id FROM users WHERE username = :username";
 $stmt = $pdo->prepare($query);
 $stmt->bindParam(':username', $un, PDO::PARAM_STR);
@@ -26,44 +26,18 @@ $user_id = $stmt->fetchColumn();
 $stmt->closeCursor();
 
 // Get selected time filter
-$timeframe = isset($_GET['timeframe']) ? $_GET['timeframe'] : 'monthly';
-
-// Set date range based on filter
-$endDate = date('Y-m-d H:i:s');
-switch ($timeframe) {
-    case 'weekly':
-        $startDate = date('Y-m-d H:i:s', strtotime('-7 days'));
-        break;
-    case 'yearly':
-        $startDate = date('Y-m-d H:i:s', strtotime('-1 year'));
-        break;
-    case 'monthly':
-        $startDate = date('Y-m-d H:i:s', strtotime('-1 month'));
-        break;
-    case 'lastYear':
-        // Set start and end dates for the entire last year
-        $startDate = date('Y-m-d H:i:s', strtotime('first day of January last year'));
-        $endDate = date('Y-m-d H:i:s', strtotime('last day of December last year'));
-        break;
-    case 'lastMonth':
-        // Set start and end dates for the previous month
-        $startDate = date('Y-m-d H:i:s', strtotime('first day of last month'));
-        $endDate = date('Y-m-d H:i:s', strtotime('last day of last month'));
-        break;
-    default:
-        $startDate = date('Y-m-d H:i:s', strtotime('-1 month'));
-        break;
-}
+$startDate = isset($_GET['startDate']) ? $_GET['startDate'] . ' 00:00:00' : date('Y-m-01 00:00:00');
+$endDate = isset($_GET['endDate']) ? $_GET['endDate'] . ' 23:59:59' : date('Y-m-d 23:59:59');
 
 // Fetch budget data with date filter
 $query = "SELECT c.category_name, 
                  SUM(CASE WHEN t.transaction_type = 'EXPENSE' THEN t.transaction_amount ELSE 0 END) AS expense_total,
                  SUM(CASE WHEN t.transaction_type = 'INCOME' THEN t.transaction_amount ELSE 0 END) AS income_total
-    FROM transaction t
-    JOIN category c ON t.category_id = c.category_id
-    WHERE t.user_id = :user_id
-    AND t.transaction_date BETWEEN :startDate AND :endDate
-    GROUP BY c.category_name";
+          FROM transaction t
+          JOIN category c ON t.category_id = c.category_id
+          WHERE t.user_id = :user_id
+            AND t.transaction_date BETWEEN :startDate AND :endDate
+          GROUP BY c.category_name";
 
 $stmt = $pdo->prepare($query);
 $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
@@ -71,9 +45,12 @@ $stmt->bindParam(':startDate', $startDate);
 $stmt->bindParam(':endDate', $endDate);
 $stmt->execute();
 
+$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 $categories = [];
 $expenseAmounts = [];
 $incomeAmounts = [];
+$budgetLimits = [];
 $colors = [];
 
 $categoryColors = [
@@ -85,17 +62,36 @@ $categoryColors = [
     'PERSONAL CARE' => '#BDC3C7',
     'ENTERTAINMENT' => '#1F77B4',
     'LOANS' => '#FF9F00',
-    'TAXES' => '#D32F2F',
+    'TAXES' => '#C2185B',
     'SAVINGS OR INVESTMENTS' => '#388E3C',
     'GIFTS AND DONATIONS' => '#1976D2',
-    'LEGAL' => '#F44336'
+    'LEGAL' => '#9b59b6'
 ];
 
-while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $categories[] = $row['category_name'];
-    $expenseAmounts[] = $row['expense_total'];
-    $incomeAmounts[] = $row['income_total'];
-    $colors[] = $categoryColors[$row['category_name']] ?? '#000000';
+// Populate arrays with result data
+foreach ($results as $row) {
+    $category = $row['category_name'];
+    $categories[] = $category;
+    $expenseAmounts[] = (float) $row['expense_total'];
+    $incomeAmounts[] = (float) $row['income_total'];
+    $colors[] = $categoryColors[$category] ?? '#7f8c8d'; // fallback color
+
+    // Get budget limit per category
+    $budgetQuery = "SELECT monthly_limit 
+                    FROM budget b 
+                    JOIN category c ON b.category_id = c.category_id 
+                    WHERE b.user_id = :user_id 
+                      AND c.category_name = :category_name 
+                      AND DATE_FORMAT(b.budget_month, '%Y-%m') = :month
+                    LIMIT 1";
+    $budgetStmt = $pdo->prepare($budgetQuery);
+    $budgetStmt->execute([
+        ':user_id' => $user_id,
+        ':category_name' => $category,
+        ':month' => date('Y-m', strtotime($startDate))
+    ]);
+    $budgetLimit = $budgetStmt->fetchColumn();
+    $budgetLimits[] = $budgetLimit ?: 0;
 }
 
 $pdo = null;
@@ -131,14 +127,11 @@ $pdo = null;
             <h2>Budget Report</h2>
 
             <form method="get" style="margin-bottom: 20px;">
-                <label for="timeframe">View by: </label>
-                <select name="timeframe" id="timeframe" onchange="this.form.submit()">
-                    <option value="weekly" <?php if ($timeframe === 'weekly') echo 'selected'; ?>>This Week</option>
-                    <option value="monthly" <?php if ($timeframe === 'monthly') echo 'selected'; ?>>This Month</option>
-                    <option value="yearly" <?php if ($timeframe === 'yearly') echo 'selected'; ?>>This Year</option>
-                    <option value="lastYear" <?php if ($timeframe === 'lastYear') echo 'selected'; ?>>Last Year</option>
-                    <option value="lastMonth" <?php if ($timeframe === 'lastMonth') echo 'selected'; ?>>Last Month</option>
-                </select>
+                <label for="start">Start Date:</label>
+                <input type="date" name="startDate" value="<?php echo isset($_GET['startDate']) ? $_GET['startDate'] : ''; ?>">
+                <label for="end">End Date:</label>
+                <input type="date" name="endDate" value="<?php echo isset($_GET['endDate']) ? $_GET['endDate'] : ''; ?>">
+                <button type="submit">Filter</button>
             </form>
 
             <canvas id="pieChart"></canvas>
@@ -149,8 +142,8 @@ $pdo = null;
                 const expenseAmounts = <?php echo json_encode($expenseAmounts); ?>;
                 const incomeAmounts = <?php echo json_encode($incomeAmounts); ?>;
                 const colors = <?php echo json_encode($colors); ?>;
+                const budgetLimits = <?php echo json_encode($budgetLimits); ?>;
 
-            
                 new Chart(document.getElementById('pieChart'), {
                     type: 'pie',
                     data: {
@@ -160,12 +153,7 @@ $pdo = null;
                                 label: 'Expenses',
                                 data: expenseAmounts,
                                 backgroundColor: colors
-                            },
-                            {
-                                label: 'Income',
-                                data: incomeAmounts,
-                                backgroundColor: '#3498db' // Blue color for Income
-                            }
+                             }
                         ]
                     },
                     options: {
@@ -178,15 +166,6 @@ $pdo = null;
                                         return '$' + amount.toFixed(2);
                                     }
                                 }
-                            }
-                        },
-                        legend: {
-                            onClick: function (event, legendItem) {
-                                const index = legendItem.datasetIndex;
-                                const chart = this.chart;
-                                const meta = chart.getDatasetMeta(index);
-                                meta.hidden = !meta.hidden;  
-                                chart.update();
                             }
                         }
                     }
@@ -203,9 +182,9 @@ $pdo = null;
                                 backgroundColor: colors
                             },
                             {
-                                label: 'Income',
-                                data: incomeAmounts,
-                                backgroundColor: '#3498db' // Blue color for Income
+                                label: 'Budget Limit',
+                                data: budgetLimits,
+                                backgroundColor: '#F44336'
                             }
                         ]
                     },
@@ -219,15 +198,6 @@ $pdo = null;
                                         return '$' + amount.toFixed(2);
                                     }
                                 }
-                            }
-                        },
-                        legend: {
-                            onClick: function (event, legendItem) {
-                                const index = legendItem.datasetIndex;
-                                const chart = this.chart;
-                                const meta = chart.getDatasetMeta(index);
-                                meta.hidden = !meta.hidden; 
-                                chart.update();
                             }
                         }
                     }

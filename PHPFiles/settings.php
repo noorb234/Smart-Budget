@@ -110,6 +110,4 @@ if (isset($_SESSION['username'])) {
     
 </footer>
 
-
-
 </html>
