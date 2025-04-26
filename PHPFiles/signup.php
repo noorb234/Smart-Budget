@@ -53,7 +53,7 @@
                 </div>
                 <div class = "input-box">
                     <label for = "question1">Security Question 1:</label><br>
-                    <input required type = "text" id = "question1" name = "security_question_1" placeholder = "DropDown"><br>
+                    <input required type = "text" id = "question1" name = "security_question_1" placeholder = "Question"><br>
                 </div>
                 <div class = "input-box">
                     <label for = "answer1">Security Question 1 answer:</label><br>
@@ -61,7 +61,7 @@
                 </div>
                 <div class = "input-box">
                     <label for = "question2">Security Question 2:</label><br>
-                    <input required type = "text" id = "question2" name = "security_question_2" placeholder = "DropDown"><br>
+                    <input required type = "text" id = "question2" name = "security_question_2" placeholder = "Question"><br>
                 </div>
                 <div class = "input-box">
                     <label for = "answer2">Security Question 2 answer:</label><br>

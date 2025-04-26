@@ -1,3 +1,10 @@
+// Function to decode HTML entities in the browser
+function decodeHtml(html) {
+    var txt = document.createElement('textarea');
+    txt.innerHTML = html;
+    return txt.value;
+}
+
 // Function to handle the "Look up Username" form submission
 function lookupUsername(event) {
     event.preventDefault(); // Prevent form submission
@@ -21,8 +28,11 @@ function lookupUsername(event) {
         if (data.success) {
             // If username is found, show the security questions form
             document.getElementById('formPassword').style.display = 'block';
-            document.getElementById('firstQuestionLabel').textContent = data.securityQuestions.firstQuestion;
-            document.getElementById('secondQuestionLabel').textContent = data.securityQuestions.secondQuestion;
+            
+			// Decode HTML entities
+            document.getElementById('firstQuestionLabel').textContent = decodeHtml(data.securityQuestions.firstQuestion);
+            document.getElementById('secondQuestionLabel').textContent = decodeHtml(data.securityQuestions.secondQuestion);
+			
         } else {
             alert('Username not found. Please check and try again or register.');
         }

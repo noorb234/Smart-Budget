@@ -31,6 +31,10 @@ try {
     if ($stmt->rowCount() > 0) {
         // Fetch the user's details
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
+		
+		//Decodes security questions so special characters show on user side
+		$decodedQuestion1 = htmlspecialchars_decode($user['security_question_1']);
+        $decodedQuestion2 = htmlspecialchars_decode($user['security_question_2']);
 
         // Validate the security answers
         if ($user['security_answer_1'] === $firstAnswer && $user['security_answer_2'] === $secondAnswer) {
@@ -47,7 +51,11 @@ try {
 
             // Execute the update statement
             if ($updateStmt->execute()) {
-                echo json_encode(['success' => true]);
+                echo json_encode(['success' => true,
+									'securityQuestions' => [
+									'firstQuestion' => $decodedQuestion1,
+									'secondQuestion' => $decodedQuestion2]
+									]);
             } else {
                 echo json_encode(['success' => false, 'error' => 'Failed to update password']);
             }
