@@ -51,7 +51,7 @@ if (isset($_SESSION['username'])) {
 	<script src="toggleTheme.js"></script>
 </head>
 <body class="<?php echo ($theme_preference === 'dark mode') ? 'dark-mode' : 'light-mode'; ?>">
-    <?php include 'header.php'; ?></div>
+    <?php include 'header.php'; ?>
 
     <main class="settings-container">
   <h2 class="page-title">Settings</h2>
@@ -121,6 +121,46 @@ if (isset($_SESSION['username'])) {
     newPassword.addEventListener("input", checkPasswordsMatch);
     confirmPassword.addEventListener("input", checkPasswordsMatch);
   });
+
+  document.addEventListener("DOMContentLoaded", () => {
+  const saveBtn = document.querySelector(".save-btn");
+
+  saveBtn.addEventListener("click", () => {
+    const currentPassword = document.getElementById("currentPassword").value;
+    const newPassword = document.getElementById("newPassword").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
+
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      alert("Please fill in all fields.");
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      alert("New passwords do not match.");
+      return;
+    }
+
+    fetch("changePassword.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ currentPassword, newPassword })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        alert("Password changed successfully!");
+        window.location.reload(); // or redirect as needed
+      } else {
+        alert(data.error || "Failed to change password.");
+      }
+    })
+    .catch(error => {
+      console.error("Error:", error);
+      alert("An unexpected error occurred.");
+    });
+  });
+});
+
 </script>
 
 </body>

@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <?php
-require_once 'config.php';
-?>
+require_once 'config.php';?>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -56,7 +55,7 @@ require_once 'config.php';
             <span id="passwordMismatchWarning" style="color: red; display: none;">Passwords do not match.</span>
 
             <button id="resetPassword" type="button">Reset Password</button>
-        </>
+        </div>
     </form>
 </main>
 </div>
