@@ -53,8 +53,9 @@ function resetPassword(event) {
     const firstAnswer = document.getElementById('firstAnswerField').value;
     const secondAnswer = document.getElementById('secondAnswerField').value;
     const newPassword = document.getElementById('ResetPasswordLabelField').value;
+	const confirmPassword = document.getElementByID('confirmPasswordLabelField').value;
 
-    if (!firstAnswer || !secondAnswer || !newPassword) {
+    if (!firstAnswer || !secondAnswer || !newPassword || !confirmPassword) {
         alert('Please fill out all fields.');
         return;
     }
@@ -64,7 +65,7 @@ function resetPassword(event) {
     fetch('resetPassword.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, firstAnswer, secondAnswer, newPassword })
+        body: JSON.stringify({ username, firstAnswer, secondAnswer, newPassword, confirmPassword })
     })
     .then(response => response.json())
     .then(data => {

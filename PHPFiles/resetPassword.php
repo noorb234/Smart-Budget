@@ -15,7 +15,7 @@ if (empty($username) || empty($firstAnswer) || empty($secondAnswer) || empty($ne
 }
 
 // Prepare SQL query to get the security answers for the username
-$sql = "SELECT security_answer_1, security_answer_2, password, security_question_1, security_question_2, password FROM users WHERE username = :username";
+$sql = "SELECT security_answer_1, security_answer_2, password FROM users WHERE username = :username";
 
 try {
     // Prepare the PDO statement
