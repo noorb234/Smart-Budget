@@ -53,14 +53,14 @@ function resetPassword(event) {
     const firstAnswer = document.getElementById('firstAnswerField').value;
     const secondAnswer = document.getElementById('secondAnswerField').value;
     const newPassword = document.getElementById('ResetPasswordLabelField').value;
-	const confirmPassword = document.getElementByID('confirmPasswordLabelField').value;
+	const confirmPassword = document.getElementById('ConfirmPasswordLabelField').value;
 
     if (!firstAnswer || !secondAnswer || !newPassword || !confirmPassword) {
         alert('Please fill out all fields.');
         return;
     }
 
-    console.log({ username, firstAnswer, secondAnswer, newPassword });
+    console.log({ username, firstAnswer, secondAnswer, newPassword, confirmPassword });
 
     fetch('resetPassword.php', {
         method: 'POST',
