@@ -64,6 +64,14 @@ if (isset($_SESSION['username']))
 	$user_id = $stmt->fetchColumn();
 	$stmt->closeCursor();
 	
+	// Get the user's theme preference
+	$query_theme = "SELECT preferences FROM users WHERE user_id = :user_id";
+	$stmt_theme = $pdo->prepare($query_theme);
+	$stmt_theme->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+	$stmt_theme->execute();
+	$theme_preference = $stmt_theme->fetchColumn();
+	$stmt_theme->closeCursor();
+	
 	//Prepare statement to get firstName for user
 	$query_first_name = "SELECT firstName FROM users WHERE user_id = :user_id";
 	$stmt_first_name = $pdo->prepare($query_first_name);
@@ -210,10 +218,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && !isset($_POST['ajax']) && isset($_PO
     
     <script src="include.js"></script>
 	<script src="fetchCategoryBudget.js"></script>
+	<script src="toggleTheme.js"></script>
 </head>
 
-<body onload="includeHeader()">
-    <div include-header = "header.php"></div>
+<body <body class="<?php echo ($theme_preference === 'dark mode') ? 'dark-mode' : 'light-mode'; ?>">
+    <?php include 'header.php'; ?></div>
     <h1 class = "WelcomeUser">Welcome, <?php echo htmlspecialchars($first_name); ?>!</h1>
 
     <main class = "mainBody">

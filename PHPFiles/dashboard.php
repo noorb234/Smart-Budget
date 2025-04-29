@@ -26,6 +26,14 @@ if (isset($_SESSION['username']))
 	$user_id = $stmt->fetchColumn();
 	$stmt->closeCursor();
 	
+	// Get the user's theme preference
+	$query_theme = "SELECT preferences FROM users WHERE user_id = :user_id";
+	$stmt_theme = $pdo->prepare($query_theme);
+	$stmt_theme->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+	$stmt_theme->execute();
+	$theme_preference = $stmt_theme->fetchColumn();
+	$stmt_theme->closeCursor();
+	
 	//Prepare statement to get firstName for user
 	$query_first_name = "SELECT firstName FROM users WHERE user_id = :user_id";
 	$stmt_first_name = $pdo->prepare($query_first_name);
@@ -72,6 +80,40 @@ if (isset($_SESSION['username']))
 	$stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
 	$stmt->execute();
 	$transactions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+	
+	// Prepare statement to get the total monthly limit for all categories for the current month
+	$query_total_budget = "
+		SELECT SUM(monthly_limit) 
+		FROM budget 
+		WHERE user_id = :user_id 
+		AND budget_month = :current_month
+		AND monthly_limit > 0";  // Ensure we only sum valid budgets
+
+	$stmt_total_budget = $pdo->prepare($query_total_budget);
+	$stmt_total_budget->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+	$stmt_total_budget->bindParam(':current_month', $current_month, PDO::PARAM_STR);
+	$stmt_total_budget->execute();
+
+	// Fetch total budget amount for all categories
+	$total_budget = $stmt_total_budget->fetchColumn();
+	$stmt_total_budget->closeCursor();
+	
+	$budget_warning = false;
+	if ($total_budget > 0 && $total_spending >= 0.75 * $total_budget) {
+		$budget_warning = true;
+	}
+	
+	//Calulate percent of budget used
+	$budget_used_percentage = 0;
+	if ($total_budget > 0) {
+		$budget_used_percentage = ($total_spending / $total_budget) * 100;
+	}
+	
+	// Calculate remaining budget
+	$remaining_budget = $total_budget - $total_spending;
+	
+	// Calculate how much over the budget they are
+	$over_budget_amount = $total_spending - $total_budget;
 }
 ?>
 
@@ -84,11 +126,12 @@ if (isset($_SESSION['username']))
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <meta charset="UTF-8">
     <script src="include.js"></script>
+	<script src="toggleTheme.js"></script>
 	
 </head>
  <!-- #region -->
-<body onload="includeHeader()">
-    <div include-header = "header.php"></div>
+<body class="<?php echo ($theme_preference === 'dark mode') ? 'dark-mode' : 'light-mode'; ?>">
+    <?php include 'header.php'; ?></div>
     <h1 class = "WelcomeUser">Welcome, <?php echo htmlspecialchars($first_name); ?>!</h1>
 
     <main class = "mainBody">
@@ -99,16 +142,26 @@ if (isset($_SESSION['username']))
             <a class="sideTab" href = "BudgetScreen.php">Set A Budget</a>
 			<a class="sideTab" href = "goal.php">Goal Planning</a>
         </nav>
-        <div class = "dashboard">
-			<!-- Check if the budget is set for the current month -->
-            <?php if ($user_budget === null || $user_budget == 0): ?>
+        <div class="dashboard">
+			<?php if ($user_budget === null || $user_budget == 0): ?>
 				<p class="budget-warning">
 					You haven't set a budget for this month. 
 					<a href="BudgetScreen.php" class="set-budget-link">Set your budget now!</a>
 				</p>
 			<?php endif; ?>
             <h2 class="MonthlyExpensesLabel">Monthly Expense Total: <?php echo isset($total_spending) ? '$' . number_format($total_spending, 2) : '$0.00'; ?></h2>
-            <!-----Inserting total------>
+            
+			 <?php if ($budget_used_percentage > 100): ?>
+				<p class="budget-warning">
+					⚠️ You are over budget. You have spent $<?php echo number_format($over_budget_amount, 2); ?> over your monthly budget.
+				</p>
+			<?php elseif ($budget_used_percentage >= 75): ?>
+				<p class="budget-warning">
+					⚠️ You have used <?php echo number_format($budget_used_percentage, 2); ?>% of your monthly budget. 
+					You have $<?php echo number_format($remaining_budget, 2); ?> remaining.
+				</p>
+			<?php endif; ?>
+			
             <h2>Recent Transactions:</h2>
             <table>
 				<tr>
@@ -131,19 +184,19 @@ if (isset($_SESSION['username']))
             <a class = "viewAllLink" href = "transactions.php">View All Transactions</a>
             <div class = "iconSection">
                 <div class = "icon-item">
-                    <a href = "#">
+                    <a href = "transactions.php">
                         <i class = "fa-solid fa-square-plus"></i>
                         <p>Add an expense</p>
                     </a>
                 </div>
                 <div class = "icon-item">
-                    <a href = "#">
+                    <a href = "viewReports.php">
                         <i class = "fa fa-line-chart"></i>
                         <p>View your summary</p>
                     </a>
                 </div>
                 <div class = "icon-item">
-                    <a href = "#">
+                    <a href = "futurePlanning.php">
                         <i class = "fa-solid fa-calculator"></i>
                         <p>What if Calculator?</p>
                     </a>

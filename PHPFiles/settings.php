@@ -15,6 +15,25 @@ if (isset($_SESSION['username'])) {
     // Fetches the first name
     $first_name = $stmt_first_name->fetchColumn();
     $stmt_first_name->closeCursor();
+	
+	//Prepare statement to get user_id for user
+	$username = $_SESSION['username'];
+	$query = "SELECT user_id FROM users WHERE username = :username";
+	$stmt = $pdo->prepare($query);
+	$stmt->bindParam(':username', $username, PDO::PARAM_STR);
+	$stmt->execute();
+	
+	//Sets the user_id
+	$user_id = $stmt->fetchColumn();
+	$stmt->closeCursor();
+	
+	// Get the user's theme preference
+	$query_theme = "SELECT preferences FROM users WHERE user_id = :user_id";
+	$stmt_theme = $pdo->prepare($query_theme);
+	$stmt_theme->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+	$stmt_theme->execute();
+	$theme_preference = $stmt_theme->fetchColumn();
+	$stmt_theme->closeCursor();
 }
 ?>
 
@@ -29,9 +48,11 @@ if (isset($_SESSION['username'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <script src="include.js"></script>
+	<script src="toggleTheme.js"></script>
 </head>
-<body onload="includeHeader()">
-    <div include-header = "header.php"></div>
+<body class="<?php echo ($theme_preference === 'dark mode') ? 'dark-mode' : 'light-mode'; ?>">
+    <?php include 'header.php'; ?></div>
+
     <main class="settings-container">
   <h2 class="page-title">Settings</h2>
 

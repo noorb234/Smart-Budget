@@ -17,7 +17,7 @@
             <div class = "dropdown-content">
                 <div class="theme-toggle">
                     <label class="switch">
-                        <input type="checkbox" id="theme-switch">
+                        <input type="checkbox" id="theme-switch" <?php if ($theme_preference === 'dark mode') echo 'checked'; ?>>
                         <span class="slider-icon">
                         <span class="icon sun"><i class="fas fa-sun"></i></span>
                         <span class="icon moon"><i class="fas fa-moon"></i></span>
