@@ -44,6 +44,12 @@ if (isset($_SESSION['username'])) {
     $stmt_budget->execute();
     $total_budget = $stmt_budget->fetchColumn();
     $stmt_budget->closeCursor();
+
+    //Gets categories for dropdown list
+    $categoryQuery = "SELECT category_id, category_name FROM category";
+    $categoryStmt = $pdo->prepare($categoryQuery);
+    $categoryStmt->execute();
+    $categories = $categoryStmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 //$planned_purchase = 3500;
@@ -110,16 +116,15 @@ for ($i = 0; $i < 3; $i++) {
         <h2 class="subheading">If you're trying to make a big purchase, see how it fits into your budget</h2>    
         <!--<h2 class="subheading" style ="text-decoration: underline; font-style: italic; color:black">Input these values:</h2>-->
         <div class = "calculatorContainer">
-        <form class="inputForm">
+        <form class="inputForm" method = "post" action = " ">
             <div class="form-group">
                 <label for="category">Payment Type:</label>
-				<select required id="category" name="category">
-					<option value="" disabled selected>Select Category</option>
-					<?php
-					while ($row = $stmt->fetch()) {
-						echo "<option value='" . $row['category_id'] . "'>" . $row['category_name'] . "</option>";
-					}
-					?>
+				<select name="categoryID" required>
+                <option value="" disabled selected>Select a Category</option>
+                <?php foreach ($categories as $category): ?>
+                    <option value="<?php echo $category['category_id']; ?>"><?php echo htmlspecialchars($category['category_name']); ?></option>
+                <?php endforeach; ?>
+            </select>
                 <!-- input required type="text" id="category" name="category" placeholder="Category" -->
             </div>
     
@@ -152,10 +157,11 @@ for ($i = 0; $i < 3; $i++) {
         </form>
         <div class="calculator">
             <!---<h2>Output</h2>
-            <p><b>Planned Purchase:</b> Car ($<?php echo number_format($planned_purchase, 2); ?>)</p>
-            <p><b>Best Case Scenario:</b> October, you spent $<?php echo number_format($best_case_spending, 2); ?>. <span style="color: green;">This fits into your budget</span></p>
-            <p><b>Worst Case Scenario:</b> You spent $<?php echo number_format($worst_case_spending, 2); ?>. <span style="color: <?php echo ($budget_status == 'over') ? 'red' : 'green'; ?>;">This <?php echo ($budget_status == 'over') ? 'puts you over budget' : 'fits into your budget'; ?></span></p>
+            <p><b>Planned Purchase:</b> Car ($<?#php echo number_format($planned_purchase, 2); ?>)</p>
+            <p><b>Best Case Scenario:</b> October, you spent $<?#php echo number_format($best_case_spending, 2); ?>. <span style="color: green;">This fits into your budget</span></p>
+            <p><b>Worst Case Scenario:</b> You spent $<?#php echo number_format($worst_case_spending, 2); ?>. <span style="color: <?#php echo ($budget_status == 'over') ? 'red' : 'green'; ?>;">This <?#php echo ($budget_status == 'over') ? 'puts you over budget' : 'fits into your budget'; ?></span></p>
             --->
+            <?php if ($_SERVER['REQUEST_METHOD'] === 'POST'): ?>
             <h3>Smart Budget Recommendation:</h3>
                 <ul>
                     <?php foreach ($messages as $msg): ?>
@@ -224,16 +230,15 @@ for ($i = 0; $i < 3; $i++) {
         }
     });
 </script>
+<?php endif; ?>
 
-
-    
 
 </body>
-<footer class = "footer">
+<!--footer class = "footer">
     <div id = "footerSection">
         <p>Smart Budget<br>New York, NY<br>123-456-7890<br>© 2025 SmartBudget</p>
     </div>
     
-</footer>
+</footer-->
 
 </html>

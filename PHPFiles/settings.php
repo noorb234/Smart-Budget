@@ -65,10 +65,10 @@ if (isset($_SESSION['username'])) {
     </div>
   </section>
 
-  <section class="settings-section">
+  <!--section class="settings-section">
     <h3>Appearance</h3>
     <label><input type="checkbox" id="Appareancecheckbox"> Enable Dark Mode</label>
-  </section>
+  </section--!>
 
   <section class="settings-section">
     <h3>Change Password</h3>
