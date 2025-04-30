@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const themeSwitch = document.getElementById('theme-switch');
     
     // Apply the initial theme based on user preference
-    const currentTheme = document.body.classList.contains('dark-mode') ? 'dark mode' : 'light mode';
+    const currentTheme = document.documentElement.getAttribute('data-theme') === 'dark-mode' ? 'dark mode' : 'light mode';
     themeSwitch.checked = currentTheme === 'dark mode';
 
     // Toggle theme when the user interacts with the switch
@@ -10,8 +10,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const newTheme = themeSwitch.checked ? 'dark mode' : 'light mode';
 
         // Update the body class immediately
-        document.body.classList.toggle('dark-mode', newTheme === 'dark mode');
-        document.body.classList.toggle('light-mode', newTheme === 'light mode');
+        if (newTheme === 'dark mode') {
+            document.documentElement.setAttribute('data-theme', 'dark-mode');
+          } else {
+            document.documentElement.removeAttribute('data-theme');
+          }
+          
 
         // Save preference via AJAX
         fetch('update_theme.php', {
@@ -27,3 +31,4 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(err => console.error('AJAX error:', err));
     });
 });
+

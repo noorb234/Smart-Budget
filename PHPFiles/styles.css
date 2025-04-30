@@ -1,3 +1,35 @@
+:root {
+    --primary-color: #0066cc;           /* Soft yet bold blue */
+    --hover-color: #004a99;             /* Darker hover tone */
+    --icon-hover: #ffffff;
+    --background-blur: rgba(0, 102, 204, 0.8);
+    --light-blue: #f0f6fc;              /* Very soft blue background */
+    --text-dark: #1a1a1a;               /* Nearly black for better legibility */
+    --text-light: #ffffff;
+    --background-light: #fefefe;        /* Off-white to reduce eye strain */
+    --box-light: #ffffff;               /* Cards/containers */
+    --input-border: #c0c0c0;
+    --warning-color: #d32f2f;
+    --link-color: #1a73e8;
+    --button-hover: #005bb5;
+  
+    --theme-bg: var(--background-light);
+    --theme-text: var(--text-dark);
+    --theme-box: var(--box-light);
+  }
+  
+  [data-theme="dark-mode"] {
+    --theme-bg: #121212;                /* True dark background */
+    --theme-text: #e4e4e4;              /* Light gray text */
+    --theme-box: #1e1e1e;               /* Slightly raised elements */
+    --primary-color: #3399ff;           /* Vivid blue that glows well on dark */
+    --hover-color: #2672cc;
+    --light-blue: #1a1f2b;              /* Muted card background */
+    --link-color: #82b1ff;
+    --input-border: #444;
+  }
+  
+
 /*Startup Page*/
 .startupBody {
     display: flex;
@@ -16,7 +48,7 @@
 }
 
 .header {
-    background-color: #0A599D;
+    background-color: var(--primary-color);
     font-family: 'Inter', sans-serif;
     color: whitesmoke;
     padding: 20px 70px;
@@ -28,7 +60,8 @@
 }
 
 .get-started {
-    background-color: #0A599D;
+    background-color: var(--primary-color)
+;
     color: whitesmoke;
     border: none;
     border-radius: 30px;
@@ -49,13 +82,16 @@
 
 .get-started:hover {
     background-color: #E2F1FD;
-    border: 2px solid #0A599D;
-    color: #0A599D;
+    border: 2px solid var(--primary-color)
+;
+    color: var(--primary-color)
+;
     animation: none;
 }
 
 .get-started:hover a {
-    color: #0A599D;
+    color: var(--primary-color)
+;
 }
 
 @keyframes jump {
@@ -75,7 +111,8 @@
 }
 
 #top{
-    background-color: #0A599D;
+    background-color: var(--primary-color)
+;
     width: 100%;
     height: 100px;
     position: relative;
@@ -124,14 +161,15 @@
     width: 300px;
     padding: 15px;
     margin-bottom: 15px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--input-border);
     border-radius: 5px;
     box-sizing: border-box;
 }
 
 label[for="username"], label[for="password"] {
     font-size: 18px;
-    color:#0A599D;
+    color:var(--primary-color)
+;
     font-weight: bold;
     display: block;
     font-family:sans-serif;
@@ -141,7 +179,8 @@ label[for="username"], label[for="password"] {
 }
 #loginButton{
     border-radius: 30px;
-    background-color: #0A599D;  
+    background-color: var(--primary-color)
+;  
     width: 60%;
     margin-top: 10px;
     height: 40px;
@@ -173,7 +212,8 @@ label[for="username"], label[for="password"] {
     text-align: left;
     text-decoration: underline;
     font-family:sans-serif;
-    color:#0A599D;
+    color:var(--primary-color)
+;
     font-size: 15px;
     font-style: normal;
     font-weight: bold;
@@ -203,7 +243,8 @@ label[for="username"], label[for="password"] {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    color: #0A599D;
+    color: var(--primary-color)
+;
     font-family: 'Segoe UI', sans-serif;
     font-size: 32px; 
     font-weight: bold;
@@ -264,7 +305,7 @@ label[for="username"], label[for="password"] {
     width: 100%;
     padding: 14px 16px; 
     border-radius: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--input-border);
     font-size: 14px; 
     box-sizing: border-box;
     background-color: #f7f9fc; 
@@ -273,7 +314,8 @@ label[for="username"], label[for="password"] {
 
 .signup-form-top .input-box input:focus,
 .signup-form-bottom .input-box input:focus {
-    border-color: #0A599D;
+    border-color: var(--primary-color)
+;
     box-shadow: 0 0 0 3px rgba(10, 89, 157, 0.2);
     outline: none;
 }
@@ -283,7 +325,8 @@ label[for="username"], label[for="password"] {
     margin-bottom: 8px;
     font-family: 'Segoe UI', sans-serif;
     font-size: 16px;
-    color: #0A599D;
+    color: var(--primary-color)
+;
     font-weight: 600;
 }
 
@@ -298,7 +341,8 @@ label[for="username"], label[for="password"] {
 
 #signupButton {
     border-radius: 30px;
-    background-color: #0A599D;
+    background-color: var(--primary-color)
+;
     width: 220px;
     height: 55px;
     border: none;
@@ -328,7 +372,8 @@ label[for="username"], label[for="password"] {
     text-align: center;
     text-decoration: underline;
     font-family: 'Segoe UI', sans-serif;
-    color: #0A599D;
+    color: var(--primary-color)
+;
     font-size: 15px;
     font-weight: bold;
     padding: 10px;
@@ -343,7 +388,7 @@ label[for="username"], label[for="password"] {
 .footer{
     width: 100%;
     height: 100px;
-    background-color: #0A599D;
+    background-color: var(--primary-color);
     display: flex;
     justify-content: center;
     align-items: center;

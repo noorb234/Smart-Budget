@@ -1,11 +1,34 @@
 /* General Colors */
 :root {
-    --primary-color: #0A599D;
-    --hover-color: #08487D;
-    --icon-hover: #ffffff;
-    --background-blur: rgba(10, 89, 157, 0.8);
+  --primary-color: #0066cc;           /* Soft yet bold blue */
+  --hover-color: #004a99;             /* Darker hover tone */
+  --icon-hover: #ffffff;
+  --background-blur: rgba(0, 102, 204, 0.8);
+  --light-blue: #f0f6fc;              /* Very soft blue background */
+  --text-dark: #1a1a1a;               /* Nearly black for better legibility */
+  --text-light: #ffffff;
+  --background-light: #fefefe;        /* Off-white to reduce eye strain */
+  --box-light: #ffffff;               /* Cards/containers */
+  --input-border: #c0c0c0;
+  --warning-color: #d32f2f;
+  --link-color: #1a73e8;
+  --button-hover: #005bb5;
+
+  --theme-bg: var(--background-light);
+  --theme-text: var(--text-dark);
+  --theme-box: var(--box-light);
 }
 
+[data-theme="dark-mode"] {
+  --theme-bg: #121212;                /* True dark background */
+  --theme-text: #e4e4e4;              /* Light gray text */
+  --theme-box: #1e1e1e;               /* Slightly raised elements */
+  --primary-color: #3399ff;           /* Vivid blue that glows well on dark */
+  --hover-color: #2672cc;
+  --light-blue: #1a1f2b;              /* Muted card background */
+  --link-color: #82b1ff;
+  --input-border: #444;
+}
 /* Header Styling */
 #logo-container {
     position: fixed; 
@@ -114,7 +137,7 @@
     right: 0;
     top: 60px;
     float: right;
-    background-color: #f9f9f9;
+    background-color: var(--box-light);
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
     border-radius: 8px;
@@ -122,7 +145,7 @@
 }
 
 .dropdown-content a {
-    color: #274C77;
+    color: var(--link-color);
     padding: 12px 16px;
     text-decoration: none;
     display: block;
@@ -143,7 +166,7 @@
   padding: 12px 16px;          
   font-family: Inter, sans-serif;
   font-size: 14px;
-  color: #274C77;
+  color: var(--link-color);
   height: 48px;               
   box-sizing: border-box;
   margin: 0;
@@ -170,7 +193,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #ccc;
+  background-color: var(--input-border);
   transition: background-color 0.3s ease;
   border-radius: 34px;
   display: flex;
@@ -198,7 +221,8 @@
 }
 
 .switch input:checked + .slider-icon {
-  background-color: #0A599D;
+  background-color: var(--primary-color)
+;
 }
 
 .switch input:checked + .slider-icon .sun {
@@ -255,7 +279,8 @@
     height: calc(100vh - 80px);
     padding: 30px;
     gap: 30px;
-    color:#0A599D;
+    color:var(--primary-color)
+;
     font-family: inter, sans-serif;
   }
 
@@ -263,7 +288,8 @@
 .WelcomeUser{
     padding: 40px 30px 10px 30px;
     margin-top: 100px;
-    color:#0A599D;
+    color:var(--primary-color)
+;
     font-family: inter, sans-serif;
 }
 
@@ -313,7 +339,8 @@ h2.MonthlyExpensesLabel {
   
   .icon-item {
     background-color: white;
-    color: #0A599D;
+    color: var(--primary-color)
+;
     padding: 20px;
     border-radius: 10px;
     width: 150px;
@@ -348,7 +375,7 @@ h2.MonthlyExpensesLabel {
 		font-weight: bold;
 		color: red;
 		padding: 10px;
-		background-color: #f9f9f9;
+		background-color: var(--box-light);
 		border: 2px solid #e00000;
 		border-radius: 5px;
 	}
@@ -380,12 +407,12 @@ h2.MonthlyExpensesLabel {
   }
 
 .your-budget{
-    color: #000000; 
+    color: var(--primary-color); 
     font-size: 30px; 
     align-self: center;
 }
 .Category-label{
-    color: #000000; 
+    color: var(--primary-color); 
     font-size: 20px; 
     margin-top: 80px;
     align-self: left;
@@ -414,7 +441,8 @@ h2.MonthlyExpensesLabel {
 }
 
 .button1, .button2, .button3 {
-    background-color: #0A599D;
+    background-color: var(--primary-color)
+;
     color: white;
     padding: 10px 20px;
     border: none;
@@ -445,7 +473,7 @@ h2.MonthlyExpensesLabel {
 }
 
 .button1:hover, .button2:hover, .button3:hover {
-    background-color: #006494;
+    background-color: var(--button-hover);
 } 
 
 /*Transactions Page*/
@@ -487,28 +515,46 @@ h2.MonthlyExpensesLabel {
     overflow-y: auto;
     min-height: calc(100vh - 180px);
     font-family: Inter, sans-serif;
+    color: var(--primary-color)
+;
+
 }
 
 .WhatIfHeading {
     font-size: 36px;
-    color: #0A599D;
+    color: var(--primary-color)
+;
     margin-bottom: 10px;
     text-align: left;
 }
 
 .subheading {
     font-size: 20px;
-    color: #0A599D;
+    color: var(--primary-color)
+;
     margin: 5px 0 20px 0;
     text-align: left;
 }
+.calculatorContainer{
+  display: flex;
+  gap: 40px;
+  align-items: stretch;
+  flex-direction: row;
+  flex-wrap: wrap; 
+  margin-top: 20px;
+  width:100%;
+  box-sizing: border-box;
+
+}
 
 .inputForm {
-    background-color: #E2F1FD; 
+    flex: 1 1 45% !important;
+    min-width:300px;
+    box-sizing: border-box;
+    background-color: var(--light-blue); 
     padding: 30px 40px;
     border-radius: 12px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-    width: 100%;
     max-width: 600px;
     display: flex;
     flex-direction: column;
@@ -528,20 +574,22 @@ h2.MonthlyExpensesLabel {
 .form-group label {
     font-size: 16px;
     margin-bottom: 8px;
-    color: #0A599D;
+    color: var(--primary-color)
+;
     font-weight: bold;
 }
 
 .form-group input {
     padding: 12px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--input-border);
     border-radius: 8px;
     font-size: 16px;
     transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 .form-group input:focus {
-    border-color: #0A599D;
+    border-color: var(--primary-color)
+;
     box-shadow: 0 0 8px rgba(10, 89, 157, 0.3);
     outline: none;
 }
@@ -557,7 +605,8 @@ h2.MonthlyExpensesLabel {
 .submitButton {
     align-self: center;
     padding: 12px 40px;
-    background-color: #0A599D;
+    background-color: var(--primary-color)
+;
     color: #fff;
     border: none;
     border-radius: 50px;
@@ -571,12 +620,40 @@ h2.MonthlyExpensesLabel {
     background-color: #084472;
     transform: scale(1.05);
 }
+.calculator{
+    flex: 1 1 45% !important;
+    min-width:300px;
+    max-width: 600px;
+    box-sizing: border-box;
+    background-color: var(--light-blue); 
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease;
+
+}
+.calculator:hover {
+  transform: translateY(-5px);
+}
+#chart-container {
+  width: 100%;
+  height: 300;  
+  max-width: 100%;
+  margin-top: 20px;
+  position: relative;
+}
+
+#budgetChart {
+  width: 100% !important;
+  height: 100% !important;
+}
+
 
 
 /* Settings Screen */
 body {
   font-family: 'Segoe UI', sans-serif;
-  background-color: #f7f9fb;
+  background-color: (var(--light-blue));
   color: #222;
   margin: 0;
   padding: 0;
@@ -595,7 +672,8 @@ body {
 .page-title {
   font-size: 32px;
   margin-bottom: 10px;
-  color: #0A599D;
+  color: var(--primary-color)
+;
 }
 
 .settings-section {
@@ -630,7 +708,7 @@ body {
 .input {
   padding: 10px 12px;
   font-size: 16px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--input-border);
   border-radius: 6px;
   width: 100%;
   max-width: 400px;
@@ -659,7 +737,7 @@ body {
 }
 
 .reset-btn {
-  background-color: #ccc;
+  background-color: var(--input-border);
   color: #333;
 }
 
@@ -668,7 +746,8 @@ body {
 }
 
 .save-btn {
-  background-color: #0A599D;
+  background-color: var(--primary-color)
+;
   color: white;
 }
 
@@ -758,7 +837,7 @@ transition: all var(--transition-speed);
   height: 30px;
   padding: 10px;
   margin-bottom: 0px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--input-border);
   border-radius: 5px;
   box-sizing: border-box;
   gap: 5px;
@@ -770,7 +849,8 @@ transition: all var(--transition-speed);
 #GoalSubmitButton{
 
   border-radius: 30px;
-  background-color: #0A599D;
+  background-color: var(--primary-color)
+;
   width: 40%;
   height: 40px;
   margin-top: 0px;
@@ -791,7 +871,8 @@ transition: all var(--transition-speed);
 .WelcomeGoalLabel{
 
   font-size: 30px;
-  color:#0A599D;
+  color:var(--primary-color)
+;
   font-weight: bold;
   display: block;
   font-family:sans-serif;
@@ -801,7 +882,8 @@ transition: all var(--transition-speed);
 .ItemGoalLabel{
   
   font-size: 13px;
-  color:#0A599D;
+  color:var(--primary-color)
+;
   font-weight: bold;
   display: block;
   font-family:sans-serif;
@@ -812,7 +894,8 @@ transition: all var(--transition-speed);
 
 .NameGoalLabel,.PriceLabel,.GoalPriceLabel,.AmountToSaveLabel,.FrecuencyLabel{
   font-size: 18px;
-  color:#0A599D;
+  color:var(--primary-color)
+;
   font-weight: bold;
   display: block;
   font-family:sans-serif;
@@ -822,7 +905,8 @@ transition: all var(--transition-speed);
 }
 .InformationLabel{
   font-size: 23px;
-  color:#0A599D;
+  color:var(--primary-color)
+;
   font-weight: bold;
   display: block;
   text-align: center;
@@ -845,7 +929,8 @@ transition: all var(--transition-speed);
 .WelcomeUserGoalsLabel{
   padding: 40px 30px 10px 30px;
   margin-top: 100px;
-  color:#0A599D;
+  color:var(--primary-color)
+;
   font-family: inter, sans-serif;
 }
 

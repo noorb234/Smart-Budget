@@ -114,7 +114,7 @@ $pdo = null;
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Budget Reports</title>
+    <title>Reports</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="styles2.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
@@ -139,7 +139,7 @@ $pdo = null;
         </nav>
 
         <div class="reports">
-            <h2>Budget Report</h2>
+            <h2>View Your Spending</h2>
 
             <form method="get" style="margin-bottom: 20px;">
                 <label for="start">Start Date:</label>
