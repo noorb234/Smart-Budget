@@ -36,9 +36,7 @@
 		$security_answer_1 = "";
 		$security_question_2 = "";
 		$security_answer_2 = "";
-
-		//testing
-		$preference = "dark mode";
+		$preference = "light mode";
 
 		//Checks if fields are set and sanitizes input from user
 		if (isset($_POST['firstName']))

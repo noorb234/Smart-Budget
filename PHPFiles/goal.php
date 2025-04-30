@@ -72,7 +72,7 @@ if (isset($_SESSION['username'])) {
             <a class="GoalssideTab" href ="transactions.php">Transactions</a>
             <a class="GoalssideTab" href = "viewReports.php">View Your Reports</a>
             <a class="GoalssideTab" href = "BudgetScreen.php">Set A Budget</a>
-            <a class="GoalssideTab" href = "goal.php">Goal Planning</a>
+            <a class="GoalssideTab" href = "goal.php">BudgetWise AI</a>
         </nav>
         
         <div class="goalsContrainer">
@@ -81,8 +81,8 @@ if (isset($_SESSION['username'])) {
 
                 <div class="GoalFormDiv">
 
-                    <label class="WelcomeGoalLabel"><b>Welcome to the Goal Section</b></label>
-                    <label class="ItemGoalLabel">Provide a item that you would like to buy </label>
+                    <label class="WelcomeGoalLabel"><b>Hi I'm Penny!  </b><i class="fa-solid fa-face-smile-beam"></i></label>
+                    <label class="ItemGoalLabel">I'm here to help you save your money, write in information you want to buy and I'll give you helpful tips to save your money. </label>
 
                     <label class="NameGoalLabel">Name</label> 
                     <input type="text" id="thingToBuyTextField" placeholder="Enter name">
@@ -107,7 +107,7 @@ if (isset($_SESSION['username'])) {
         </div>
 
         <div class="AIresponseArea">
-        <label class="InformationLabel">Provide information about an Item and tips will be given</label>
+        <label class="InformationLabel">Penny's advice: </label>
         <label class="AIResponseLabel"> </label>
         </div>
         

@@ -888,8 +888,8 @@ transition: all var(--transition-speed);
   display: block;
   font-family:sans-serif;
   margin-top: 0px;
-  margin-bottom: 3px;
-  padding-left: 100px;
+  margin-bottom: 5px;
+  
 }
 
 .NameGoalLabel,.PriceLabel,.GoalPriceLabel,.AmountToSaveLabel,.FrecuencyLabel{

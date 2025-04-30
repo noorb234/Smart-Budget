@@ -135,7 +135,7 @@ $pdo = null;
             <a class="sideTab" href="transactions.php">Transactions</a>
             <a class="sideTab" href="viewReports.php">View Your Reports</a>
             <a class="sideTab" href="BudgetScreen.php">Set A Budget</a>
-            <a class="sideTab" href="goal.php">Goal Planning</a>
+            <a class="GoalssideTab" href = "goal.php">BudgetWise AI</a>
         </nav>
 
         <div class="reports">
