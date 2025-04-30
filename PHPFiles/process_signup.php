@@ -216,6 +216,8 @@
 			$stmt->bindParam(9, $sq2, PDO::PARAM_STR, 255);
 			$stmt->bindParam(10, $sa2, PDO::PARAM_STR, 255);
 			$stmt->bindParam(11, $prf, PDO::PARAM_STR, 255);
+			
+			$stmt->execute([$fn, $ln, $em, $pn, $un, $pw, $sq1, $sa1, $sq2, $sa2, $prf]);
 		}
 		?>
 	</div>
