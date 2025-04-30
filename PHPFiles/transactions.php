@@ -236,7 +236,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['deleteTransaction'])) 
     <meta charset="UTF-8">
     <script src="include.js"></script>
 	<script src="toggleTheme.js"></script>
+
 </head>
+<style>
+    .CSVbutton {
+        padding-right: 5px;
+        text-align: right;
+        background: none;
+        border: none;
+        color: blue;  /* Hyperlink color */
+        font-size: 16px;  /* Adjust font size */
+        cursor: pointer;
+        text-decoration: underline;  /* Makes it look like a hyperlink */
+    }
+
+    .CSVbutton:hover {
+        color: darkblue;  /* Change color on hover */
+        text-decoration: none;  /* Optional: Remove underline on hover */
+    }
+</style>
 
 <body class="<?php echo ($theme_preference === 'dark mode') ? 'dark-mode' : 'light-mode'; ?>">
     <?php include 'header.php'; ?></div>
@@ -253,6 +271,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['deleteTransaction'])) 
         </nav>
         <div class = "transactions">
         <h2>Transaction History</h2>
+        <a class= "CSVbutton" onclick="downloadCSV()">Export as CSV</a>
         <table>
             <tr>
                 <th>Date</th>
@@ -314,6 +333,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['deleteTransaction'])) 
             <input type="checkbox" name="isRecurring">
 
             <button type="submit" name="addTransaction">Add</button>
+            
+    
         </form>
         </div>
 </main>
@@ -325,5 +346,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['deleteTransaction'])) 
     </div>
     
 </footer>
+
+<script>
+
+function downloadCSV() {
+    const rows = [['Date', 'Amount', 'Type', 'Category', 'Note', 'Recurring']];
+    document.querySelectorAll('table tr:not(:first-child)').forEach(row => {
+        const cols = Array.from(row.querySelectorAll('td')).map(td => td.innerText.trim());
+        rows.push(cols);
+    });
+
+    const csvContent = "data:text/csv;charset=utf-8," 
+        + rows.map(e => e.join(",")).join("\n");
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "SmartBudget_Transactions.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+</script>
 
 </html>
