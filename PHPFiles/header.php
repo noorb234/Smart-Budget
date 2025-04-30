@@ -14,7 +14,7 @@
             <div class = "icon"> 
                 <i class="fa-solid fa-user"></i>
             </div>
-            <script src="toggleTheme.js"></script>
+            <!-- <script src="toggleTheme.js"></script> -->
 
             <div class = "dropdown-content">
                 <div class="theme-toggle">

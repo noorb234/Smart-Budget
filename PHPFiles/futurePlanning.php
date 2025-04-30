@@ -26,6 +26,15 @@ if (isset($_SESSION['username'])) {
     $stmt->execute();
     $user_id = $stmt->fetchColumn();
     $stmt->closeCursor();
+	
+	// Get the user's theme preference
+	$query_theme = "SELECT preferences FROM users WHERE user_id = :user_id";
+	$stmt_theme = $pdo->prepare($query_theme);
+	$stmt_theme->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+	$stmt_theme->execute();
+	$theme_preference = $stmt_theme->fetchColumn();
+	$stmt_theme->closeCursor();
+
     
     $query_budget = "SELECT SUM(monthly_limit) AS total_budget FROM budget WHERE user_id = :user_id AND budget_month = :current_month";
     $stmt_budget = $pdo->prepare($query_budget);
@@ -90,10 +99,12 @@ for ($i = 0; $i < 3; $i++) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <meta charset="UTF-8">
     <script src="include.js"></script>
+	<script src="toggleTheme.js"></script>
 </head>
 
-<body onload="includeHeader()">
-    <div include-header = "header.php"></div>
+<body class="<?php echo ($theme_preference === 'dark mode') ? 'dark-mode' : 'light-mode'; ?>">
+    <?php include 'header.php'; ?></div>
+
     <main class="futureBody">
         <h1 class="WhatIfHeading">Welcome to the What If? Calculator</h1>
         <h2 class="subheading">If you're trying to make a big purchase, see how it fits into your budget</h2>    

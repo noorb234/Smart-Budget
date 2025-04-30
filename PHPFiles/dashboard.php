@@ -33,6 +33,7 @@ if (isset($_SESSION['username']))
 	$stmt_theme->execute();
 	$theme_preference = $stmt_theme->fetchColumn();
 	$stmt_theme->closeCursor();
+
 	
 	//Prepare statement to get firstName for user
 	$query_first_name = "SELECT firstName FROM users WHERE user_id = :user_id";
