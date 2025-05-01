@@ -53,7 +53,7 @@ if (isset($_SESSION['username'])) {
 }
 
 //$planned_purchase = 3500;
-//$worst_case_spending = 4005;
+$worst_case_spending = 300;
 //$best_case_spending = 3250;
 //$budget_status = ($worst_case_spending > $total_budget) ? 'over' : 'within';
 
